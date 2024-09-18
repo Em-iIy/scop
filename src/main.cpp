@@ -101,18 +101,10 @@ int	main(int argc, char **argv)
 		glClear(GL_COLOR_BUFFER_BIT);
 
 		shader.use();
-		if (texMode % 2 == 0) {
-			glActiveTexture(GL_TEXTURE0);
-			glBindTexture(GL_TEXTURE_2D, boberTex);
-			glActiveTexture(GL_TEXTURE1);
-			glBindTexture(GL_TEXTURE_2D, otherTex);
-		}
-		else {
-			glActiveTexture(GL_TEXTURE0);
-			glBindTexture(GL_TEXTURE_2D, 0);
-			glActiveTexture(GL_TEXTURE1);
-			glBindTexture(GL_TEXTURE_2D, 0);
-		}
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, boberTex);
+		glActiveTexture(GL_TEXTURE1);
+		glBindTexture(GL_TEXTURE_2D, otherTex);
 
 
 		float timeValue = glfwGetTime();
@@ -125,6 +117,7 @@ int	main(int argc, char **argv)
 		angle += 1.0f;
 		shader.setFloat("dim", dimValue);
 		shader.setMat4("rotate", m);
+		shader.setInt("texMode", texMode);
 		mainVao.Bind();
 		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 		glfwSwapBuffers(window);
