@@ -13,7 +13,7 @@ FILES_SRCS =	vec1.cpp \
 				cross.cpp \
 				normalize.cpp \
 				mat4_transform.cpp \
-				# mat4_projection.cpp \
+				mat4_projection.cpp \
 
 FILES_OBJS = $(FILES_SRCS:.cpp=.o)
 

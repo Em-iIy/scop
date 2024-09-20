@@ -41,10 +41,10 @@ void	processInput(GLFWwindow *window)
 		key_tab_state = GLFW_PRESS;
 		++wfMode;
 		++texMode;
-		// if (wfMode % 2 == 0)
-		// 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-		// else
-		// 	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+		if (wfMode % 2 == 0)
+			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+		else
+			glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	}
 }
 
@@ -109,14 +109,17 @@ int	main(int argc, char **argv)
 
 		float timeValue = glfwGetTime();
 		float dimValue = sin(timeValue) / 2.0f + 1.0f;
-		mlm::mat4 m(1.0f);
-		m = mlm::scale(m, mlm::vec3(dimValue));
-		// m = mlm::rotate(m, mlm::radians(angle), mlm::vec3(1.0f, -1.0f, -3.0f));
-		m = mlm::rotate(m, mlm::radians(angle), mlm::vec3(1.0f, 1.0f, 0.0f));
-		v4 = mlm::normalize(m[0]);
+		mlm::mat4 projection = mlm::perspective(100.0f, 0.1f, 100.0f);
+		mlm::mat4 model(1.0f);
+		model = mlm::translate(model, mlm::vec3(0.0f, 0.0f, -2.f));
+		model = mlm::rotate(model, mlm::radians(angle), mlm::vec3(0.0f, 1.0f, 1.0f));
+		// m = mlm::scale(m, mlm::vec3(dimValue));
+		// m = mlm::rotate(m, mlm::radians(angle), mlm::vec3(1.0f, 1.0f, 0.0f));
+		// v4 = mlm::normalize(m[0]);
 		angle += 1.0f;
 		shader.setFloat("dim", dimValue);
-		shader.setMat4("rotate", m);
+		shader.setMat4("rotate", model);
+		shader.setMat4("projection", projection);
 		shader.setInt("texMode", texMode);
 		mainVao.Bind();
 		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);

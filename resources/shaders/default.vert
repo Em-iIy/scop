@@ -8,11 +8,13 @@ out vec3	color;
 out vec2	tex;
 
 uniform mat4	rotate;
+uniform mat4	projection;
 
 void main()
 {
-	gl_Position = rotate * vec4(aPos, 1.0);
-	color = aColor;
+	gl_Position = projection * rotate * vec4(aPos, 1.0);
+	// color = aColor;
+	color = gl_Position.xyz;
 	tex = aTex;
 	// tex = vec2(aPos.x, aPos.y);
 }
