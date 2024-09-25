@@ -1,4 +1,4 @@
 - parse .obj files
 - parse .mtl files
 + implement perspective matrix
-- add aspect ratio to perspective matrix
++ add aspect ratio to perspective matrix

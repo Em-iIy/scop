@@ -10,13 +10,26 @@ namespace mlm {
 mat4	perspective(const float &fov, const float &near, const float &far)
 {
 	float scale = 1 / tan(fov * 0.5 * M_PI / 180);
-	mlm::mat4 projection(
+	float diff = far - near;
+	return (mat4(
 		scale, 0.0f, 0.0f, 0.0f,
 		0.0f, scale, 0.0f, 0.0f,
-		0.0f, 0.0f, -((far + near) / (far - near)), -1.0f,
-		0.0f, 0.0f, -((far * near) / (far - near)), 0.0f
-	);
-	return (projection);
+		0.0f, 0.0f, -(far / diff), -1.0f,
+		0.0f, 0.0f, -((far * near) / diff), 0.0f
+	));
+}
+
+
+mat4	perspective(const float &fov, const float &aspect, const float &near, const float &far)
+{
+	float tanFov = tan(fov / 2);
+	float diff = far - near;
+	return (mat4(
+		1 / (aspect * tanFov), 0.0f, 0.0f, 0.0f,
+		0.0f, 1 / tanFov, 0.0f, 0.0f,
+		0.0f, 0.0f, -(far / diff), -1.0f,
+		0.0f, 0.0f, -(far * near)  / diff, 0.0f
+	));
 }
 
 }

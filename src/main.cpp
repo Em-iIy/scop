@@ -11,6 +11,10 @@ Created on: 06/09/2024
 
 #include "utils.hpp"
 
+#define WIDTH 1000
+#define HEIGHT 1000
+#define FOV	100.0f
+
 int texMode = 1;
 
 
@@ -60,7 +64,7 @@ int	main(int argc, char **argv)
 	}
 	initGlfw();
 
-	GLFWwindow *window = initWindow(1000, 1000, argv[1], NULL, NULL);
+	GLFWwindow *window = initWindow(WIDTH, HEIGHT, argv[1], NULL, NULL);
 
 	Shader shader("./resources/shaders/default.vert", "./resources/shaders/default.frag");
 
@@ -93,6 +97,7 @@ int	main(int argc, char **argv)
 	mainVao.LinkAtr(mainVbo, 2, 2, GL_FLOAT, 8 * sizeof(GLfloat), (void *)(6 * sizeof(GLfloat)));
 	mainVao.Unbind();
 	float angle = 15.0f;
+
 	while (!glfwWindowShouldClose(window))
 	{
 		processInput(window);
@@ -109,7 +114,7 @@ int	main(int argc, char **argv)
 
 		float timeValue = glfwGetTime();
 		float dimValue = sin(timeValue) / 2.0f + 1.0f;
-		mlm::mat4 projection = mlm::perspective(100.0f, 0.1f, 100.0f);
+		mlm::mat4 projection = mlm::perspective(mlm::radians(FOV), (float)WIDTH / (float)HEIGHT, 0.1f, 100.0f);
 		mlm::mat4 model(1.0f);
 		model = mlm::translate(model, mlm::vec3(0.0f, 0.0f, -2.f));
 		model = mlm::rotate(model, mlm::radians(angle), mlm::vec3(0.0f, 1.0f, 1.0f));
