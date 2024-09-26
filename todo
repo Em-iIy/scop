@@ -1,4 +1,5 @@
 - parse .obj files
 - parse .mtl files
+- implement lookat function
 + implement perspective matrix
 + add aspect ratio to perspective matrix
