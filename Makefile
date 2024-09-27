@@ -15,6 +15,7 @@ FILES_SRCS =	main.cpp \
 				EBO.cpp \
 				bmp.cpp \
 				textures.cpp \
+				Object.cpp \
 
 FILES_OBJS = $(FILES_SRCS:.cpp=.o)
 
@@ -29,6 +30,7 @@ vpath %.cpp	$(DIR_SRCS) \
 			$(DIR_SRCS)lib/bmp/ \
 			$(DIR_SRCS)utils/ \
 			$(DIR_SRCS)utils/gl/ \
+			$(DIR_SRCS)Object/ \
 
 # ----------------------------------------Sources
 SRCS = $(FILES_SRCS:%=$(DIR_SRCS)%)
