@@ -8,6 +8,7 @@ NAME = scop
 FILES_SRCS =	main.cpp \
 				glad.cpp \
 				read_file.cpp \
+				split.cpp \
 				Window.cpp \
 				Shader.cpp \
 				VAO.cpp \

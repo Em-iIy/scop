@@ -4,6 +4,8 @@ Created on: 06/09/2024
 */
 #pragma once
 
+#include <vector>
+
 #include "gl/VAO.hpp"
 #include "gl/VBO.hpp"
 #include "gl/EBO.hpp"
@@ -11,5 +13,7 @@ Created on: 06/09/2024
 #include "gl/Window.hpp"
 #include "gl/textures.hpp"
 
-char *read_file(const char *file_name);
-std::string	readFile(const char *fileName);
+char 		*read_file(const char *file_name);
+
+std::vector<std::string>	split(const std::string &str, const std::string &d);
+void						split(std::vector<std::string> &vect, const std::string &str, const std::string &d);
