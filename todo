@@ -1,16 +1,40 @@
 - parse .obj files
+	+ handle faces with different types of indices
+		+ parse out the separate indices when applicable
+		+ merge the 3 types of indices to 1 list of indices
 	+ handle faces with more than 3 indices
 	- handle invalid formatting
 		+ too little arguments (< 3) on v, vn and f, and (< 2) on vt
 		+ too many arguments (> 3) on v and vn, and (> 2) on vt
 	- parse o
 	- parse mtllib
-	- parse vn
-		- add vn to final vertex vector
+	+ parse vn
+		+ add vn to final vertex vector
 	+ parse vt
 		+ add vt to final vertex vector
-	
+	+ center object
+
+- handle render objects differently if they have normals/uvs or not
+	- create different shader
+	- create different vbo/vao
+
+- implement moving the object around
+	- improve and add to input processing
+	- print out controls
+
+- implement texture
+	- add smooth transition
+		- create lerp functions
+		- add variable to fragment shader
+	- correctly apply texture to 42.obj
+
+- implement camera
+	- implement lookat function
+
 - parse .mtl files
-- implement lookat function
+	- open file from filename in .obj file
+	- implement different materials in shader
+
++ add deltatime
 + implement perspective matrix
 + add aspect ratio to perspective matrix

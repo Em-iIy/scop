@@ -20,5 +20,5 @@ void main()
 		FragColor = vec4(color * sin(tex.x * 40.0f), 1.0f);
 		FragColor.g = cos(tex.y * 20.0f);
 	}
-	// FragColor = vec4(color, 1.0f);
+	FragColor = vec4(color, 1.0f);
 }

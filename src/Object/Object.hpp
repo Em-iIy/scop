@@ -20,19 +20,25 @@ private:
 	std::vector<Vertex>		vertices;
 	std::vector<GLuint>		indices;
 
-	std::vector<mlm::vec3>	coords;
-	std::vector<mlm::vec3>	normals;
-	std::vector<mlm::vec2>	texUVs;
+	std::vector<GLuint>		pos_indices;
+	std::vector<GLuint>		normal_indices;
+	std::vector<GLuint>		uv_indices;
 
-	void	parse_coords(char *data, int i, int nl);
-	void	parse_tex(char *data, int i, int nl);
-	void	parse_face(char *data, int i, int nl);
+	std::vector<mlm::vec3>	pos;
+	std::vector<mlm::vec3>	normals;
+	std::vector<mlm::vec2>	uvs;
+
+	bool					multi_indexed = false;
+
+	void	parse_line(std::string &line);
 
 	void	fill_vertices();
 public:
 	Object(const std::string &file_path, const std::string &file_name);
 	~Object();
 
-	const std::vector<Vertex>	&get_vertices();
-	const std::vector<GLuint>	&get_indices();
+	mlm::vec3						get_center();
+
+	const std::vector<Vertex>		&get_vertices();
+	const std::vector<GLuint>		&get_indices();
 };
