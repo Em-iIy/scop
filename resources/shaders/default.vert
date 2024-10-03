@@ -6,6 +6,7 @@ layout (location = 2) in vec3 aColor;
 layout (location = 3) in vec2 aTex;
 
 out vec3	color;
+out vec3	normal;
 out vec2	tex;
 
 uniform mat4	rotate;
@@ -15,8 +16,6 @@ void main()
 {
 	gl_Position = projection * rotate * vec4(aPos, 1.0);
 	color = aColor;
-	// color = gl_Position.xyz;
-	// color = aNormal;
+	normal = aNormal;
 	tex = aTex;
-	// tex = vec2(aPos.x, aPos.y);
 }

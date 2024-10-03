@@ -14,7 +14,7 @@ Created on: 06/09/2024
 
 #define WIDTH 1920
 #define HEIGHT 1080
-#define FOV	60.0f
+#define FOV	100.0f
 
 int texMode = 1;
 float  g_delta_time = 0.0f;
@@ -110,16 +110,16 @@ int	main(int argc, char **argv)
 	mainVao.Unbind();
 
 	float angle = 15.0f;
+	float texMix = 0.0f;
 	mlm::vec4 v4(1.0f);
 
 	glEnable(GL_DEPTH_TEST);
-
 	float end_time = glfwGetTime();
 	std::cout << "init time:" << end_time - start_time << std::endl;
 	while (!glfwWindowShouldClose(window))
 	{
 		processInput(window);
-
+		g_delta_time = deltaTimeUpdate();
 		// glClearColor(v4.x, v4.y, v4.z, 1.0f);
 		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 		
@@ -131,21 +131,33 @@ int	main(int argc, char **argv)
 		glActiveTexture(GL_TEXTURE1);
 		glBindTexture(GL_TEXTURE_2D, otherTex);
 
-
+		if (texMode % 2 == 0 && texMix < 1.0f)
+		{
+			texMix += g_delta_time;
+		}
+		else if (texMode % 2 == 1 && texMix > 0.0f)
+		{
+			texMix -= g_delta_time;
+		}
 		float timeValue = glfwGetTime();
 		float dimValue = sin(timeValue) / 2.0f + 1.0f;
 		mlm::mat4 projection = mlm::perspective(mlm::radians(FOV), (float)WIDTH / (float)HEIGHT, 0.1f, 100.0f);
 		mlm::mat4 model(1.0f);
-		model = mlm::translate(model, mlm::vec3(0.0f, 0.0f, -20.f));
-		model = mlm::scale(model, mlm::vec3(5.f));
+		model = mlm::translate(model, mlm::vec3(0.0f, 0.0f, -5.f));
+		// model = mlm::scale(model, mlm::vec3(5.0f));
+		model = mlm::scale(model, mlm::vec3(2.0f));
+		// model = mlm::scale(model, mlm::vec3(0.5f));
+		// model = mlm::scale(model, mlm::vec3(0.2f));
 
-		model = mlm::rotate(model, mlm::radians(95.0f), mlm::vec3(0.0f, 1.0f, 0.0f));
+		model = mlm::rotate(model, mlm::radians(90.0f), mlm::vec3(0.0f, 1.0f, 0.0f));
+		// model = mlm::rotate(model, mlm::radians(-30.0f), mlm::vec3(1.0f, 0.0f, 0.0f));
 		model = mlm::rotate(model, mlm::radians((angle / 2)), mlm::vec3(0.0f, 1.0f, 0.0f));
 		// m = mlm::scale(m, mlm::vec3(dimValue));
 		// m = mlm::rotate(m, mlm::radians(angle), mlm::vec3(1.0f, 1.0f, 0.0f));
 		v4 = mlm::normalize(model[0]);
-		angle += 20.0f * deltaTimeUpdate();
+		angle += 90.0f * g_delta_time;
 		shader.setFloat("dim", dimValue);
+		shader.setFloat("texMix", texMix);
 		shader.setMat4("rotate", model);
 		shader.setMat4("projection", projection);
 		shader.setInt("texMode", texMode);
@@ -164,7 +176,7 @@ int	main(int argc, char **argv)
 	}
 	catch(const std::exception& e)
 	{
-		std::cerr << e.what() << std::endl;
+		// std::cerr << e.what() << std::endl;
 	}
 	return (0);
 }

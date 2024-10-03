@@ -4,21 +4,15 @@ out vec4 FragColor;
 uniform sampler2D	boberTex;
 uniform sampler2D	otherTex;
 uniform float		dim;
+uniform float		texMix;
 uniform int			texMode;
 
 in vec3	color;
+in vec3	normal;
 in vec2	tex;
 
 void main()
 {
-	if (texMode % 2 == 0)
-	{
-		FragColor = mix(texture(boberTex, tex), texture(otherTex, tex), 0.2f);
-	}
-	else
-	{
-		FragColor = vec4(color * sin(tex.x * 40.0f), 1.0f);
-		FragColor.g = cos(tex.y * 20.0f);
-	}
-	FragColor = vec4(color, 1.0f);
+	FragColor = mix(vec4(color, 1.0f), vec4(normal, 1.0f), 0.4f);
+	FragColor = mix(FragColor, texture(boberTex, tex), texMix);
 }

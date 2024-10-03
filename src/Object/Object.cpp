@@ -80,8 +80,20 @@ void Object::fill_vertices()
 	for (uint i = 0; i < this->pos_indices.size(); ++i)
 	{
 		GLuint index;
+		if (this->pos_indices[i] >= this->pos.size())
+		{
+			throw std::runtime_error("Index out of range");
+		}
 		if (this->multi_indexed == true)
 		{
+			if (this->normal_indices[i] >= this->normals.size())
+			{
+				throw std::runtime_error("Index out of range");
+			}
+			if (this->uv_indices[i] >= this->uvs.size())
+			{
+				throw std::runtime_error("Index out of range");
+			}
 			temp_vertex = {
 				.pos = this->pos[this->pos_indices[i]],
 				.normal = this->normals[this->normal_indices[i]],
@@ -97,12 +109,9 @@ void Object::fill_vertices()
 				.pos = pos,
 				.normal = pos,
 				.color = random_vec3(),
-				.texUV = mlm::vec2(pos.x, pos.y)
+				.texUV = mlm::vec2(pos.z, pos.y)
 			};
 		}
-		std::cout << temp_vertex.color.x << " ";
-		std::cout << temp_vertex.color.y << " ";
-		std::cout << temp_vertex.color.z << std::endl;
 		if (find_vertex_index(vertex_index_map, temp_vertex, index) == true)
 		{
 			this->indices.push_back(index);
@@ -194,7 +203,6 @@ static void parse_face(std::vector<std::string> &params, std::vector<GLuint> &po
 void	Object::parse_line(std::string &line)
 {
 	std::vector<std::string> params = split(line, " ");
-
 	switch (check_token(params[0]))
 	{
 	case SKIP:
@@ -247,6 +255,7 @@ Object::Object(const std::string &file_path, const std::string &file_name)
 		{
 			throw std::runtime_error("Invalid face indexing");
 		}
+		fill_vertices();
 	}
 	catch(const std::runtime_error& e)
 	{
@@ -254,11 +263,13 @@ Object::Object(const std::string &file_path, const std::string &file_name)
 		free(data);
 		throw std::exception();
 	}
-	fill_vertices();
 	free(data);
 	this->pos.clear();
 	this->normals.clear();
 	this->uvs.clear();
+	this->pos_indices.clear();
+	this->normal_indices.clear();
+	this->uv_indices.clear();
 }
 
 Object::~Object()

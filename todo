@@ -6,6 +6,7 @@
 	- handle invalid formatting
 		+ too little arguments (< 3) on v, vn and f, and (< 2) on vt
 		+ too many arguments (> 3) on v and vn, and (> 2) on vt
+		+ index out of range
 	- parse o
 	- parse mtllib
 	+ parse vn
@@ -22,11 +23,10 @@
 	- improve and add to input processing
 	- print out controls
 
-- implement texture
-	- add smooth transition
-		- create lerp functions
-		- add variable to fragment shader
-	- correctly apply texture to 42.obj
++ implement texture
+	+ add smooth transition
+		+ add variable to fragment shader
+	+ correctly apply texture to 42.obj (kinda)
 
 - implement camera
 	- implement lookat function
@@ -34,6 +34,20 @@
 - parse .mtl files
 	- open file from filename in .obj file
 	- implement different materials in shader
+
+- add config file
+	- define path to resources
+	- define object file to load
+	- define texture to load
+	? rotation speed/direction
+	? scale
+	? object location
+	? FOV
+	? light source
+
+- documentation
+	- add comments to code
+	- create readme
 
 + add deltatime
 + implement perspective matrix
