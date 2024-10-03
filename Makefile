@@ -10,6 +10,7 @@ FILES_SRCS =	main.cpp \
 				read_file.cpp \
 				split.cpp \
 				Window.cpp \
+				Key.cpp \
 				Shader.cpp \
 				VAO.cpp \
 				VBO.cpp \
@@ -46,7 +47,7 @@ EMLM = $(DIR_EMLM)libmlm.a
 CC = c++
 CFLAGS = -std=c++11
 CFLAGS += -Wall -Wextra -Werror
-CFLAGS += -g -fsanitize=address
+# CFLAGS += -g -fsanitize=address
 UNAME = $(shell uname)
 
 # Linux flags
