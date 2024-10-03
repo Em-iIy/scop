@@ -15,9 +15,14 @@ Created on: 06/09/2024
 #define WIDTH 1920
 #define HEIGHT 1080
 #define FOV	100.0f
+#define MOVE_SPEED 10.0f
+#define SCALE_SPEED 2.0f
 
-int texMode = 1;
-float  g_delta_time = 0.0f;
+int			texMode = 1;
+int			wfMode = 0;
+float		g_delta_time = 0.0f;
+mlm::vec3	obj_pos = mlm::vec3(0.0f, 0.0f, -20.0f);
+mlm::vec3	obj_scale = mlm::vec3(1.0f);
 
 float deltaTimeUpdate(void)
 {
@@ -42,25 +47,89 @@ void	m4print(const mlm::mat4 &m)
 
 void	processInput(GLFWwindow *window)
 {
-	static int wfMode = 0;
-	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
+
+	static Key esc(window, GLFW_KEY_ESCAPE);
+	static Key one(window, GLFW_KEY_1);
+	static Key tab(window, GLFW_KEY_TAB);
+	static Key w(window, GLFW_KEY_W);
+	static Key a(window, GLFW_KEY_A);
+	static Key s(window, GLFW_KEY_S);
+	static Key d(window, GLFW_KEY_D);
+	static Key lshift(window, GLFW_KEY_LEFT_SHIFT);
+	static Key space(window, GLFW_KEY_SPACE);
+	static Key plus(window, GLFW_KEY_EQUAL); // for the button with the + on it
+	static Key minus(window, GLFW_KEY_MINUS);
+
+	one.update();
+	tab.update();
+	esc.update();
+	w.update();
+	a.update();
+	s.update();
+	d.update();
+	lshift.update();
+	space.update();
+	plus.update();
+	minus.update();
+
+	if (one.is_pressed())
+	{
+		++wfMode;
+		if (wfMode % 2 == 0)
+			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+		else
+			glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	}
+	if (tab.is_pressed())
+	{
+		++texMode;
+	}
+	if (esc.is_pressed())
 	{
 		glfwSetWindowShouldClose(window, true);
 	}
-	
-	static int key_tab_state = GLFW_RELEASE;
-	if (glfwGetKey(window, GLFW_KEY_TAB) == GLFW_RELEASE)
-		key_tab_state = GLFW_RELEASE;
-	else if (glfwGetKey(window, GLFW_KEY_TAB) == GLFW_PRESS && key_tab_state == GLFW_RELEASE)
+	if (w.is_down())
 	{
-		key_tab_state = GLFW_PRESS;
-		++wfMode;
-		++texMode;
-		// if (wfMode % 2 == 0)
-		// 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-		// else
-		// 	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+		obj_pos += mlm::vec3(0.0f, 0.0f, -1.0f) * g_delta_time * MOVE_SPEED;
 	}
+	if (a.is_down())
+	{
+		obj_pos += mlm::vec3(-1.0f, 0.0f, 0.0f) * g_delta_time * MOVE_SPEED;
+	}
+	if (s.is_down())
+	{
+		obj_pos += mlm::vec3(0.0f, 0.0f, 1.0f) * g_delta_time * MOVE_SPEED;
+	}
+	if (d.is_down())
+	{
+		obj_pos += mlm::vec3(1.0f, 0.0f, 0.0f) * g_delta_time * MOVE_SPEED;
+	}
+	if (lshift.is_down())
+	{
+		obj_pos += mlm::vec3(0.0f, -1.0f, 0.0f) * g_delta_time * MOVE_SPEED;
+	}
+	if (space.is_down())
+	{
+		obj_pos += mlm::vec3(0.0f, 1.0f, 0.0f) * g_delta_time * MOVE_SPEED;
+	}
+	if (plus.is_down())
+	{
+		obj_scale += g_delta_time * SCALE_SPEED;
+	}
+	if (minus.is_down())
+	{
+		obj_scale -= g_delta_time * SCALE_SPEED;
+	}
+}
+
+static void	print_controls()
+{
+	std::cout << "W S:\t\tMove object on z axis" << std::endl;
+	std::cout << "A D:\t\tMove object on x axis" << std::endl;
+	std::cout << "Shift Space:\tMove object on y axis" << std::endl;
+	std::cout << "- +:\t\tScale object up and down" << std::endl;
+	std::cout << "Tab:\t\tEnable texture mode" << std::endl;
+	std::cout << "1:\t\tEnable wireframe mode" << std::endl;
 }
 
 int	main(int argc, char **argv)
@@ -79,7 +148,6 @@ int	main(int argc, char **argv)
 	float start_time = glfwGetTime();
 	Object obj("./resources/objects/", argv[1]);
 	mlm::vec3 obj_center = obj.get_center();
-	std::cout << obj_center << std::endl;
 	std::vector<Vertex> vertices = obj.get_vertices();
 	std::vector<GLuint> indices = obj.get_indices();
 	std::cout << "indices size: " << indices.size() << std::endl;
@@ -116,6 +184,7 @@ int	main(int argc, char **argv)
 	glEnable(GL_DEPTH_TEST);
 	float end_time = glfwGetTime();
 	std::cout << "init time:" << end_time - start_time << std::endl;
+	print_controls();
 	while (!glfwWindowShouldClose(window))
 	{
 		processInput(window);
@@ -143,15 +212,12 @@ int	main(int argc, char **argv)
 		float dimValue = sin(timeValue) / 2.0f + 1.0f;
 		mlm::mat4 projection = mlm::perspective(mlm::radians(FOV), (float)WIDTH / (float)HEIGHT, 0.1f, 100.0f);
 		mlm::mat4 model(1.0f);
-		model = mlm::translate(model, mlm::vec3(0.0f, 0.0f, -5.f));
-		// model = mlm::scale(model, mlm::vec3(5.0f));
-		model = mlm::scale(model, mlm::vec3(2.0f));
-		// model = mlm::scale(model, mlm::vec3(0.5f));
-		// model = mlm::scale(model, mlm::vec3(0.2f));
+		model = mlm::translate(model, obj_pos);
+		model = mlm::scale(model, obj_scale);
 
 		model = mlm::rotate(model, mlm::radians(90.0f), mlm::vec3(0.0f, 1.0f, 0.0f));
 		// model = mlm::rotate(model, mlm::radians(-30.0f), mlm::vec3(1.0f, 0.0f, 0.0f));
-		model = mlm::rotate(model, mlm::radians((angle / 2)), mlm::vec3(0.0f, 1.0f, 0.0f));
+		model = mlm::rotate(model, mlm::radians(angle), mlm::vec3(0.0f, 1.0f, 0.0f));
 		// m = mlm::scale(m, mlm::vec3(dimValue));
 		// m = mlm::rotate(m, mlm::radians(angle), mlm::vec3(1.0f, 1.0f, 0.0f));
 		v4 = mlm::normalize(model[0]);

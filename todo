@@ -19,9 +19,12 @@
 	- create different shader
 	- create different vbo/vao
 
-- implement moving the object around
-	- improve and add to input processing
-	- print out controls
++ improve input processing
+	+ implement key class for easier input processing
+	+ print out controls
+	+ implement moving the object around
+	+ implement scaling the object
+	+ separate wireframe and texture key
 
 + implement texture
 	+ add smooth transition
