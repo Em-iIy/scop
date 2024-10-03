@@ -28,17 +28,21 @@ private:
 	std::vector<mlm::vec3>	normals;
 	std::vector<mlm::vec2>	uvs;
 
+	mlm::vec3				center;
+
 	bool					multi_indexed = false;
 
 	void	parse_line(std::string &line);
 
 	void	fill_vertices();
+
+	void	center_vertices();
 public:
-	Object(const std::string &file_path, const std::string &file_name);
+	Object(const std::string &file_name);
 	~Object();
 
-	mlm::vec3						get_center();
+	const mlm::vec3					&get_center() const;
 
-	const std::vector<Vertex>		&get_vertices();
-	const std::vector<GLuint>		&get_indices();
+	const std::vector<Vertex>		&get_vertices() const;
+	const std::vector<GLuint>		&get_indices() const;
 };

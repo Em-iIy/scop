@@ -75,7 +75,6 @@ void Object::fill_vertices()
 {
 	std::map<Vertex, GLuint> vertex_index_map;
 	Vertex temp_vertex;
-
 	this->indices.reserve(this->pos_indices.size());
 	for (uint i = 0; i < this->pos_indices.size(); ++i)
 	{
@@ -97,7 +96,8 @@ void Object::fill_vertices()
 			temp_vertex = {
 				.pos = this->pos[this->pos_indices[i]],
 				.normal = this->normals[this->normal_indices[i]],
-				.color = random_vec3(),
+				.color = mlm::vec3(1.0f),
+				// .color = random_vec3(),
 				.texUV = this->uvs[this->uv_indices[i]]
 			};
 		}
@@ -108,6 +108,7 @@ void Object::fill_vertices()
 			temp_vertex = {
 				.pos = pos,
 				.normal = pos,
+				// .color = mlm::vec3(1.0f),
 				.color = random_vec3(),
 				.texUV = mlm::vec2(pos.z, pos.y)
 			};
@@ -126,19 +127,23 @@ void Object::fill_vertices()
 	}
 }
 
-mlm::vec3	Object::get_center()
+const mlm::vec3	&Object::get_center() const
 {
-	mlm::vec3 ret(0.0f);
-	for (std::vector<Vertex>::iterator it = this->vertices.begin(); it != this->vertices.end(); it++)
+	return (this->center);
+}
+
+void	Object::center_vertices()
+{
+	this->center = mlm::vec3(0.0f);
+	for (std::vector<mlm::vec3>::iterator it = this->pos.begin(); it != this->pos.end(); it++)
 	{
-		ret += it->pos;
+		this->center += *it;
 	}
-	ret /= this->vertices.size();
-	for (std::vector<Vertex>::iterator it = this->vertices.begin(); it != this->vertices.end(); it++)
+	this->center /= this->pos.size();
+	for (std::vector<mlm::vec3>::iterator it = this->pos.begin(); it != this->pos.end(); it++)
 	{
-		it->pos -= ret;
+		*it -= this->center;
 	}
-	return (ret);
 }
 
 static void	parse_vector(std::vector<std::string> &params, std::vector<mlm::vec3> &vect)
@@ -226,14 +231,14 @@ void	Object::parse_line(std::string &line)
 }
 
 
-Object::Object(const std::string &file_path, const std::string &file_name)
+Object::Object(const std::string &file_name)
 {
-	std::cout << "loading " << file_path + file_name << "..." << std::endl;
-	char *data = read_file((file_path + file_name).c_str());
+	std::cout << "loading " << file_name << "..." << std::endl;
+	char *data = read_file((file_name).c_str());
 	size_t i = 0;
 	if (!data)
 	{
-		std::cerr << "Object: Could not open " << file_path + file_name << std::endl;
+		std::cerr << "Object: Could not open " << file_name << std::endl;
 		throw std::exception();
 	}
 	std::vector<std::string> lines = split(data, "\n");
@@ -241,7 +246,7 @@ Object::Object(const std::string &file_path, const std::string &file_name)
 	{
 		for (i = 0; i < lines.size(); i++)
 		{
-			parse_line(lines[i]);
+			this->parse_line(lines[i]);
 		}
 		if (this->uv_indices.size() == 0 && this->normal_indices.size() == 0)
 		{
@@ -255,11 +260,12 @@ Object::Object(const std::string &file_path, const std::string &file_name)
 		{
 			throw std::runtime_error("Invalid face indexing");
 		}
-		fill_vertices();
+		this->center_vertices();
+		this->fill_vertices();
 	}
 	catch(const std::runtime_error& e)
 	{
-		std::cerr << file_path + file_name << ":" << i << " " << e.what() << '\n';
+		std::cerr << file_name << ":" << i << " " << e.what() << '\n';
 		free(data);
 		throw std::exception();
 	}
@@ -276,12 +282,12 @@ Object::~Object()
 {
 }
 
-const std::vector<Vertex>	&Object::get_vertices()
+const std::vector<Vertex>	&Object::get_vertices() const
 {
 	return (this->vertices);
 }
 
-const std::vector<GLuint>	&Object::get_indices()
+const std::vector<GLuint>	&Object::get_indices() const
 {
 	return (this->indices);
 }

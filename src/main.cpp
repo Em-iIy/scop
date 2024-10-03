@@ -14,14 +14,14 @@ Created on: 06/09/2024
 
 #define WIDTH 1920
 #define HEIGHT 1080
-#define FOV	100.0f
+#define FOV	45.0f
 #define MOVE_SPEED 10.0f
-#define SCALE_SPEED 2.0f
+#define SCALE_SPEED 5.0f
 
 int			texMode = 1;
 int			wfMode = 0;
 float		g_delta_time = 0.0f;
-mlm::vec3	obj_pos = mlm::vec3(0.0f, 0.0f, -20.0f);
+mlm::vec3	obj_pos = mlm::vec3(0.0f, 0.0f, -10.0f);
 mlm::vec3	obj_scale = mlm::vec3(1.0f);
 
 float deltaTimeUpdate(void)
@@ -135,7 +135,7 @@ static void	print_controls()
 int	main(int argc, char **argv)
 {
 	srand(time(NULL));
-	if (argc != 2)
+	if (argc != 3)
 	{
 		std::cerr << "Missing input files!" << std::endl;
 		return (1);
@@ -143,24 +143,23 @@ int	main(int argc, char **argv)
 	try
 	{
 	initGlfw();
-	GLFWwindow *window = initWindow(WIDTH, HEIGHT, argv[1], NULL, NULL);
 
 	float start_time = glfwGetTime();
-	Object obj("./resources/objects/", argv[1]);
-	mlm::vec3 obj_center = obj.get_center();
+	Object obj(argv[1]);
+	const mlm::vec3 obj_center = obj.get_center();
+	std::cout << obj_center << std::endl;
 	std::vector<Vertex> vertices = obj.get_vertices();
 	std::vector<GLuint> indices = obj.get_indices();
 	std::cout << "indices size: " << indices.size() << std::endl;
 	std::cout << "vertices size: " << vertices.size() << std::endl;
 
 
+	GLFWwindow *window = initWindow(WIDTH, HEIGHT, "scop", NULL, NULL);
 
 	Shader shader("./resources/shaders/default.vert", "./resources/shaders/default.frag");
-	GLuint boberTex = load_texture("./resources/textures/bober.bmp", GL_RGB);
-	GLuint otherTex = load_texture("./resources/textures/32x32.bmp", GL_RGB);
+	GLuint texture = load_texture(argv[2], GL_RGB);
 	shader.use();
 	shader.setInt("boberTex", 0);
-	shader.setInt("otherTex", 1);
 
 
 
@@ -177,9 +176,8 @@ int	main(int argc, char **argv)
 	mainVao.LinkAtr(mainVbo, 3, 2, GL_FLOAT, sizeof(Vertex), (void *)(9 * sizeof(GLfloat)));
 	mainVao.Unbind();
 
-	float angle = 15.0f;
+	float angle = 0.0f;
 	float texMix = 0.0f;
-	mlm::vec4 v4(1.0f);
 
 	glEnable(GL_DEPTH_TEST);
 	float end_time = glfwGetTime();
@@ -196,9 +194,7 @@ int	main(int argc, char **argv)
 
 		shader.use();
 		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, boberTex);
-		glActiveTexture(GL_TEXTURE1);
-		glBindTexture(GL_TEXTURE_2D, otherTex);
+		glBindTexture(GL_TEXTURE_2D, texture);
 
 		if (texMode % 2 == 0 && texMix < 1.0f)
 		{
@@ -208,8 +204,6 @@ int	main(int argc, char **argv)
 		{
 			texMix -= g_delta_time;
 		}
-		float timeValue = glfwGetTime();
-		float dimValue = sin(timeValue) / 2.0f + 1.0f;
 		mlm::mat4 projection = mlm::perspective(mlm::radians(FOV), (float)WIDTH / (float)HEIGHT, 0.1f, 100.0f);
 		mlm::mat4 model(1.0f);
 		model = mlm::translate(model, obj_pos);
@@ -220,13 +214,10 @@ int	main(int argc, char **argv)
 		model = mlm::rotate(model, mlm::radians(angle), mlm::vec3(0.0f, 1.0f, 0.0f));
 		// m = mlm::scale(m, mlm::vec3(dimValue));
 		// m = mlm::rotate(m, mlm::radians(angle), mlm::vec3(1.0f, 1.0f, 0.0f));
-		v4 = mlm::normalize(model[0]);
-		angle += 90.0f * g_delta_time;
-		shader.setFloat("dim", dimValue);
+		angle += 45.0f * g_delta_time;
 		shader.setFloat("texMix", texMix);
 		shader.setMat4("rotate", model);
 		shader.setMat4("projection", projection);
-		shader.setInt("texMode", texMode);
 		mainVao.Bind();
 		glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
 		glfwSwapBuffers(window);
@@ -236,8 +227,7 @@ int	main(int argc, char **argv)
 	mainVbo.Delete();
 	mainVao.Delete();
 	shader.Delete();
-	delete_texture(boberTex);
-	delete_texture(otherTex);
+	delete_texture(texture);
 	// glfwTerminate(); // Can cause leaks occasionally
 	}
 	catch(const std::exception& e)
