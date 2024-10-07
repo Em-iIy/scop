@@ -128,6 +128,7 @@ static void	print_controls()
 	std::cout << "A D:\t\tMove object on x axis" << std::endl;
 	std::cout << "Shift Space:\tMove object on y axis" << std::endl;
 	std::cout << "- +:\t\tScale object up and down" << std::endl;
+	std::cout << "esc:\t\tQuit program" << std::endl;
 	std::cout << "Tab:\t\tEnable texture mode" << std::endl;
 	std::cout << "1:\t\tEnable wireframe mode" << std::endl;
 }
@@ -206,6 +207,7 @@ int	main(int argc, char **argv)
 		{
 			texMix -= g_delta_time;
 		}
+		texMix = fminf32(fmaxf32(texMix, 0.0f), 1.0f);
 		mlm::mat4 projection = mlm::perspective(mlm::radians(FOV), (float)WIDTH / (float)HEIGHT, 0.1f, 100.0f);
 		mlm::mat4 model(1.0f);
 		model = mlm::translate(model, obj_pos);
