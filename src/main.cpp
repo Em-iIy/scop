@@ -157,7 +157,7 @@ int	main(int argc, char **argv)
 	GLFWwindow *window = initWindow(WIDTH, HEIGHT, "scop", NULL, NULL);
 
 	Shader shader("./resources/shaders/default.vert", "./resources/shaders/default.frag");
-	GLuint texture = load_texture(argv[2], GL_RGB);
+	GLuint texture = load_texture(argv[2]);
 	shader.use();
 	shader.setInt("boberTex", 0);
 
@@ -180,6 +180,8 @@ int	main(int argc, char **argv)
 	float texMix = 0.0f;
 
 	glEnable(GL_DEPTH_TEST);
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	float end_time = glfwGetTime();
 	std::cout << "init time:" << end_time - start_time << std::endl;
 	print_controls();

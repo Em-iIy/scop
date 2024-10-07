@@ -8,10 +8,11 @@ Created on: 09/09/2024
 #include "bmp/bmp.h"
 
 
-uint	load_texture(const char *img, int format)
+uint	load_texture(const char *img)
 {
-	uint texture;
-	bmp_t bmp;
+	uint	texture;
+	bmp_t	bmp;
+	int		format;
 
 	// Generate and bind texture
 	glGenTextures(1, &texture);
@@ -34,6 +35,14 @@ uint	load_texture(const char *img, int format)
 	{
 		std::cout << "load_texture: could not load: " << img << std::endl;
 		exit(EXIT_FAILURE);
+	}
+	if (bmp.pixel_size == 3)
+	{
+		format = GL_RGB;
+	}
+	else
+	{
+		format = GL_RGBA;
 	}
 
 	// Assign the image to the generated texture

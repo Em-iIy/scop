@@ -29,6 +29,7 @@ typedef struct bmp_header_s {
 	uint32_t	bitmap_width;
 	uint32_t	bitmap_height;
 	uint32_t	DIB_header_size;
+	uint16_t	bits_per_pixel;
 	uint16_t	id;
 	uint8_t		BMP_header_raw_bytes[BMP_HEADER_SIZE];
 	uint8_t		DIB_header_raw_bytes[DIB_MAX_HEADER_SIZE];
@@ -45,6 +46,7 @@ typedef struct bmp_s {
 	uint32_t	size;
 	uint32_t	width;
 	uint32_t	height;
+	uint32_t	pixel_size;
 	uint8_t		*data;
 }	bmp_t;
 

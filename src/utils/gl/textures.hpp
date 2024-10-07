@@ -7,5 +7,5 @@ Created on: 09/09/2024
 
 #include <iostream>
 
-uint	load_texture(const char *img, int format);
+uint	load_texture(const char *img);
 void	delete_texture(uint texture);

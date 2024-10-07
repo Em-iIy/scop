@@ -27,6 +27,7 @@ static void	bmp_print_header(bmp_header_t *hdr)
 	printf("file size:\t%d\n", hdr->file_size);
 	printf("data offset:\t%d\n", hdr->data_offset);
 	printf("bitmap size:\t%d\n", hdr->bitmap_size);
+	printf("bits per pixel:\t%d\n", hdr->bits_per_pixel);
 	printf("width: %d\theight: %d\n", hdr->bitmap_width, hdr->bitmap_height);
 	printf("BMP header bytes:\n");
 	printf("%X:\t", 0);
@@ -87,6 +88,7 @@ static bool bmp_read_DIB_header(int fd, bmp_header_t *hdr)
 	// Retrieve the values from the DIB header
 	hdr->bitmap_width = get_4_bytes(hdr->DIB_header_raw_bytes, 4);
 	hdr->bitmap_height = get_4_bytes(hdr->DIB_header_raw_bytes, 8);
+	hdr->bits_per_pixel = get_2_bytes(hdr->DIB_header_raw_bytes, 14);
 	hdr->bitmap_size = get_4_bytes(hdr->DIB_header_raw_bytes, 20);
 	return (true);
 }
@@ -121,7 +123,64 @@ static bool bmp_read_BMP_header(int fd, bmp_header_t *hdr)
 	return (true);
 }
 
-static bool	bmp_read_data(int fd, bmp_header_t *hdr, bmp_t *bmp)
+static bool	bmp_read_data_32bpp(int fd, bmp_header_t *hdr, bmp_t *bmp)
+{
+	uint8_t	*buffer;
+	uint8_t	temp;
+	int		bytes_read;
+
+	// Set the fd to the start of the bit map
+	if (lseek(fd, hdr->data_offset, SEEK_SET) == -1)
+	{
+		perror("bmp_read_data lseek");
+		return (false);
+	}
+	// Allocate a buffer to read in the bitmap data
+	buffer = (uint8_t *)malloc(hdr->bitmap_size);
+	if (!buffer)
+	{
+		perror("malloc");
+		return (false);
+	}
+	// Read in the bitmap data
+	bytes_read = read(fd, buffer, hdr->bitmap_size);
+	if (bytes_read < 0)
+	{
+		perror("read");
+		return (false);
+	}
+	if (bytes_read < (int)hdr->bitmap_size)
+	{
+		fprintf(stderr, "bmp error: invalid data\n");
+		return (false);
+	}
+	// Save useful values to the bmp_t struct
+	bmp->width = hdr->bitmap_width;
+	bmp->height = hdr->bitmap_height;
+	bmp->pixel_size = hdr->bits_per_pixel / 8;
+	bmp->size = bmp->width * bmp->height * bmp->pixel_size;
+
+	// If padding is not used, there is no need to allocate a new array
+	// to store the data in without the padding.
+	bmp->data = buffer;
+	for (uint32_t y = 0; y < bmp->height; y++)
+	{
+		for (uint32_t x = 0; x < bmp->width; x++)
+		{
+			// The current index of the pixel is:
+			// amount of rows * length of row + the pixel in row * 3 bytes
+			uint32_t i = i = (y * bmp->width + x) * bmp->pixel_size;
+			
+			// Here the pixels get converted from BGR to RGB
+			temp = bmp->data[i];
+			bmp->data[i] = bmp->data[i + 2];
+			bmp->data[i + 2] = temp;
+		}
+	}
+	return (true);
+}
+
+static bool	bmp_read_data_24bpp(int fd, bmp_header_t *hdr, bmp_t *bmp)
 {
 	uint8_t	*buffer;
 	uint8_t	temp;
@@ -157,7 +216,8 @@ static bool	bmp_read_data(int fd, bmp_header_t *hdr, bmp_t *bmp)
 	// Save useful values to the bmp_t struct
 	bmp->width = hdr->bitmap_width;
 	bmp->height = hdr->bitmap_height;
-	bmp->size = bmp->width * bmp->height * 3;
+	bmp->pixel_size = hdr->bits_per_pixel / 8;
+	bmp->size = bmp->width * bmp->height * bmp->pixel_size;
 
 	// Determine whether there would be padding
 	// Each row has to be a multiple of 4 bytes long
@@ -165,9 +225,9 @@ static bool	bmp_read_data(int fd, bmp_header_t *hdr, bmp_t *bmp)
 	// Otherwise padding is used to round up to the next multiple of 4
 	// Because of this, buffer needs to get transferred to the
 	// data array without the padding
-	if ((bmp->width * 3) % 4 != 0)
+	if ((bmp->width * bmp->pixel_size) % 4 != 0)
 	{
-		padding = 4 - (bmp->width * 3) % 4;
+		padding = 4 - (bmp->width * bmp->pixel_size) % 4;
 		bmp->data = (uint8_t *)malloc(bmp->size);
 		if (!bmp->data)
 		{
@@ -181,7 +241,7 @@ static bool	bmp_read_data(int fd, bmp_header_t *hdr, bmp_t *bmp)
 			{
 				// The current index of the pixel is:
 				// amount of rows * length of row + the pixel in row * 3 bytes
-				uint32_t i = y * (bmp->width * 3 + padding) + x * 3;
+				uint32_t i = y * (bmp->width * bmp->pixel_size + padding) + x * bmp->pixel_size;
 				// Here the pixels get converted from BGR to RGB
 				bmp->data[count] = buffer[i + 2];
 				bmp->data[count + 1] = buffer[i + 1];
@@ -202,7 +262,7 @@ static bool	bmp_read_data(int fd, bmp_header_t *hdr, bmp_t *bmp)
 			{
 				// The current index of the pixel is:
 				// amount of rows * length of row + the pixel in row * 3 bytes
-				uint32_t i = y * (bmp->width * 3 + padding) + x * 3;
+				uint32_t i = y * (bmp->width * bmp->pixel_size + padding) + x * bmp->pixel_size;
 				// Here the pixels get converted from BGR to RGB
 				temp = bmp->data[i];
 				bmp->data[i] = bmp->data[i + 2];
@@ -242,10 +302,29 @@ bmp_t load_bmp(const char *file_name)
 		return (bmp);
 	}
 	// Read in data
-	if (bmp_read_data(fd, &hdr, &bmp) == false)
+	switch (hdr.bits_per_pixel)
 	{
+	case 24:
+		if (bmp_read_data_24bpp(fd, &hdr, &bmp) == false)
+		{
+			close(fd);
+			return (bmp);
+		}
+		break;
+
+	case 32:
+		if (bmp_read_data_32bpp(fd, &hdr, &bmp) == false)
+		{
+			close(fd);
+			return (bmp);
+		}
+		break;
+	
+	default:
+		fprintf(stderr, "bmp error: %d bits per pixel not supported\n", hdr.bits_per_pixel);
 		close(fd);
 		return (bmp);
+		break;
 	}
 	close(fd);
 	return (bmp);

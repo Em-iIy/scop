@@ -11,6 +11,9 @@ in vec2	tex;
 
 void main()
 {
+	vec4 texColor = texture(boberTex, tex);
 	FragColor = mix(vec4(color, 1.0f), vec4(normal, 1.0f), 0.4f);
-	FragColor = mix(FragColor, texture(boberTex, tex), texMix);
+	FragColor = mix(FragColor, texColor, texMix);
+	if (FragColor.a < 1.0f)
+		discard;
 }

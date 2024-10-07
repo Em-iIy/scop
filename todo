@@ -30,6 +30,7 @@
 	+ add smooth transition
 		+ add variable to fragment shader
 	+ correctly apply texture to 42.obj (kinda)
+	+ accept bmp files with RGBA format
 
 - implement camera
 	- implement lookat function
