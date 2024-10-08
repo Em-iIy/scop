@@ -9,6 +9,7 @@ Created on: 06/09/2024
 #include <emlm/emlm.hpp>
 #include <emlm/mlm/print/vectorPrint.hpp>
 
+#include "Camera.hpp" 
 #include "utils.hpp"
 #include "Object/Object.hpp"
 
