@@ -14,6 +14,7 @@ FILES_SRCS =	vec1.cpp \
 				normalize.cpp \
 				mat4_transform.cpp \
 				mat4_projection.cpp \
+				lookat.cpp \
 
 FILES_OBJS = $(FILES_SRCS:.cpp=.o)
 
