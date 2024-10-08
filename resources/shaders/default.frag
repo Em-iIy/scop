@@ -14,6 +14,6 @@ void main()
 	vec4 texColor = texture(boberTex, tex);
 	FragColor = mix(vec4(color, 1.0f), vec4(normal, 1.0f), 0.4f);
 	FragColor = mix(FragColor, texColor, texMix);
-	if (FragColor.a < 1.0f)
+	if (FragColor.a < 0.1f)
 		discard;
 }

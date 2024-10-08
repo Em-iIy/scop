@@ -32,8 +32,9 @@
 	+ correctly apply texture to 42.obj (kinda)
 	+ accept bmp files with RGBA format
 
-- implement camera
-	- implement lookat function
++ implement camera
+	+ implement lookat function
+	+ add camera controls to print out
 
 - parse .mtl files
 	- open file from filename in .obj file

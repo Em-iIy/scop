@@ -13,6 +13,7 @@ Created on: 06/09/2024
 #include "gl/Window.hpp"
 #include "gl/Key.hpp"
 #include "gl/textures.hpp"
+#include "gl/Camera.hpp"
 
 char 		*read_file(const char *file_name);
 

@@ -9,12 +9,13 @@ out vec3	color;
 out vec3	normal;
 out vec2	tex;
 
-uniform mat4	rotate;
+uniform mat4	model;
+uniform mat4	view;
 uniform mat4	projection;
 
 void main()
 {
-	gl_Position = projection * rotate * vec4(aPos, 1.0);
+	gl_Position = projection * view * model * vec4(aPos, 1.0);
 	color = aColor;
 	normal = aNormal;
 	tex = aTex;

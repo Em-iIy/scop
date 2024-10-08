@@ -24,6 +24,13 @@ float		g_delta_time = 0.0f;
 mlm::vec3	obj_pos = mlm::vec3(0.0f, 0.0f, -10.0f);
 mlm::vec3	obj_scale = mlm::vec3(1.0f);
 
+// move elsewhere/make static
+float lastY = HEIGHT / 2.0f;
+float lastX = WIDTH / 2.0f;
+bool firstMouse = true;
+
+Camera camera;
+
 float deltaTimeUpdate(void)
 {
 	static float last_frame = 0.0f;
@@ -45,33 +52,78 @@ void	m4print(const mlm::mat4 &m)
 	std::cout << std::endl;
 }
 
+void	mouse_callback(GLFWwindow *window, double xposIn, double yposIn)
+{
+	(void)window;
+	float xpos = static_cast<float>(xposIn);
+	float ypos = static_cast<float>(yposIn);
+
+	if (firstMouse)
+	{
+		lastX = xpos;
+		lastY = ypos;
+		firstMouse = false;
+	}
+	float xoffset = xpos - lastX;
+	float yoffset = lastY - ypos;
+
+	lastX = xpos;
+	lastY = ypos;
+
+	camera.processMouseMovement(xoffset, yoffset, true);
+}
+
 void	processInput(GLFWwindow *window)
 {
-
+	// Render options
 	static Key esc(window, GLFW_KEY_ESCAPE);
 	static Key one(window, GLFW_KEY_1);
 	static Key tab(window, GLFW_KEY_TAB);
+
+	// Camera movement
 	static Key w(window, GLFW_KEY_W);
 	static Key a(window, GLFW_KEY_A);
 	static Key s(window, GLFW_KEY_S);
 	static Key d(window, GLFW_KEY_D);
 	static Key lshift(window, GLFW_KEY_LEFT_SHIFT);
 	static Key space(window, GLFW_KEY_SPACE);
+
+	// Object movement
+	static Key up(window, GLFW_KEY_UP);
+	static Key down(window, GLFW_KEY_DOWN);
+	static Key left(window, GLFW_KEY_LEFT);
+	static Key right(window, GLFW_KEY_RIGHT);
+	static Key rshift(window, GLFW_KEY_RIGHT_SHIFT);
+	static Key rctrl(window, GLFW_KEY_RIGHT_CONTROL);
 	static Key plus(window, GLFW_KEY_EQUAL); // for the button with the + on it
 	static Key minus(window, GLFW_KEY_MINUS);
 
+	
+
+	// Render options
 	one.update();
 	tab.update();
 	esc.update();
+
+	// Camera movement
 	w.update();
 	a.update();
 	s.update();
 	d.update();
 	lshift.update();
 	space.update();
+
+	// Object movement
+	up.update();
+	down.update();
+	left.update();
+	right.update();
+	rshift.update();
+	rctrl.update();
 	plus.update();
 	minus.update();
 
+	// Render options
 	if (one.is_pressed())
 	{
 		++wfMode;
@@ -88,27 +140,56 @@ void	processInput(GLFWwindow *window)
 	{
 		glfwSetWindowShouldClose(window, true);
 	}
+
+	// Camera movement
 	if (w.is_down())
 	{
-		obj_pos += mlm::vec3(0.0f, 0.0f, -1.0f) * g_delta_time * MOVE_SPEED;
+		camera.processKeyboard(FORWARD, g_delta_time);
 	}
 	if (a.is_down())
 	{
-		obj_pos += mlm::vec3(-1.0f, 0.0f, 0.0f) * g_delta_time * MOVE_SPEED;
+		camera.processKeyboard(LEFT, g_delta_time);
 	}
 	if (s.is_down())
 	{
-		obj_pos += mlm::vec3(0.0f, 0.0f, 1.0f) * g_delta_time * MOVE_SPEED;
+		camera.processKeyboard(BACKWARD, g_delta_time);
 	}
 	if (d.is_down())
 	{
-		obj_pos += mlm::vec3(1.0f, 0.0f, 0.0f) * g_delta_time * MOVE_SPEED;
+		camera.processKeyboard(RIGHT, g_delta_time);
 	}
 	if (lshift.is_down())
 	{
-		obj_pos += mlm::vec3(0.0f, -1.0f, 0.0f) * g_delta_time * MOVE_SPEED;
+		camera.processKeyboard(DOWN, g_delta_time);
 	}
 	if (space.is_down())
+	{
+		camera.processKeyboard(UP, g_delta_time);
+	}
+	
+
+	// Object movement
+	if (up.is_down())
+	{
+		obj_pos += mlm::vec3(0.0f, 0.0f, -1.0f) * g_delta_time * MOVE_SPEED;
+	}
+	if (left.is_down())
+	{
+		obj_pos += mlm::vec3(-1.0f, 0.0f, 0.0f) * g_delta_time * MOVE_SPEED;
+	}
+	if (down.is_down())
+	{
+		obj_pos += mlm::vec3(0.0f, 0.0f, 1.0f) * g_delta_time * MOVE_SPEED;
+	}
+	if (right.is_down())
+	{
+		obj_pos += mlm::vec3(1.0f, 0.0f, 0.0f) * g_delta_time * MOVE_SPEED;
+	}
+	if (rctrl.is_down())
+	{
+		obj_pos += mlm::vec3(0.0f, -1.0f, 0.0f) * g_delta_time * MOVE_SPEED;
+	}
+	if (rshift.is_down())
 	{
 		obj_pos += mlm::vec3(0.0f, 1.0f, 0.0f) * g_delta_time * MOVE_SPEED;
 	}
@@ -124,13 +205,17 @@ void	processInput(GLFWwindow *window)
 
 static void	print_controls()
 {
-	std::cout << "W S:\t\tMove object on z axis" << std::endl;
-	std::cout << "A D:\t\tMove object on x axis" << std::endl;
-	std::cout << "Shift Space:\tMove object on y axis" << std::endl;
-	std::cout << "- +:\t\tScale object up and down" << std::endl;
-	std::cout << "esc:\t\tQuit program" << std::endl;
-	std::cout << "Tab:\t\tEnable texture mode" << std::endl;
-	std::cout << "1:\t\tEnable wireframe mode" << std::endl;
+	std::cout << "up/down arrow:\t\tMove object on z axis" << std::endl;
+	std::cout << "left/right arrow:\tMove object on x axis" << std::endl;
+	std::cout << "Right shift/Space:\tMove object on y axis" << std::endl;
+	std::cout << "-/+:\t\t\tScale object up and down" << std::endl;
+	std::cout << "W/S:\t\t\tMove camera on z axis" << std::endl;
+	std::cout << "A/D:\t\t\tMove camera on x axis" << std::endl;
+	std::cout << "Left shift/Space:\tMove camera on y axis" << std::endl;
+	std::cout << "Mouse:\t\t\tLook around" << std::endl;
+	std::cout << "esc:\t\t\tQuit program" << std::endl;
+	std::cout << "Tab:\t\t\tEnable texture mode" << std::endl;
+	std::cout << "1:\t\t\tEnable wireframe mode" << std::endl;
 }
 
 int	main(int argc, char **argv)
@@ -156,6 +241,9 @@ int	main(int argc, char **argv)
 
 
 	GLFWwindow *window = initWindow(WIDTH, HEIGHT, "scop", NULL, NULL);
+
+	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+	glfwSetCursorPosCallback(window, mouse_callback);
 
 	Shader shader("./resources/shaders/default.vert", "./resources/shaders/default.frag");
 	GLuint texture = load_texture(argv[2]);
@@ -208,6 +296,10 @@ int	main(int argc, char **argv)
 			texMix -= g_delta_time;
 		}
 		texMix = fminf32(fmaxf32(texMix, 0.0f), 1.0f);
+
+
+
+		mlm::mat4 view = camera.get_matrix();
 		mlm::mat4 projection = mlm::perspective(mlm::radians(FOV), (float)WIDTH / (float)HEIGHT, 0.1f, 100.0f);
 		mlm::mat4 model(1.0f);
 		model = mlm::translate(model, obj_pos);
@@ -220,8 +312,9 @@ int	main(int argc, char **argv)
 		// m = mlm::rotate(m, mlm::radians(angle), mlm::vec3(1.0f, 1.0f, 0.0f));
 		angle += 45.0f * g_delta_time;
 		shader.setFloat("texMix", texMix);
-		shader.setMat4("rotate", model);
+		shader.setMat4("model", model);
 		shader.setMat4("projection", projection);
+		shader.setMat4("view", view);
 		mainVao.Bind();
 		glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
 		glfwSwapBuffers(window);
