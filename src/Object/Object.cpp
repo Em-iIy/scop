@@ -132,6 +132,17 @@ const mlm::vec3	&Object::get_center() const
 	return (this->center);
 }
 
+const mlm::vec3					&Object::get_position() const
+{
+	return (this->position);
+}
+
+void							Object::set_position(const mlm::vec3 &v)
+{
+	this->position = v;
+}
+
+
 void	Object::center_vertices()
 {
 	this->center = mlm::vec3(0.0f);
@@ -231,7 +242,7 @@ void	Object::parse_line(std::string &line)
 }
 
 
-Object::Object(const std::string &file_name)
+Object::Object(const std::string &file_name): position(mlm::vec3(0.0f))
 {
 	std::cout << "loading " << file_name << "..." << std::endl;
 	char *data = read_file((file_name).c_str());

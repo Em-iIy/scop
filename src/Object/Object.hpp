@@ -29,6 +29,7 @@ private:
 	std::vector<mlm::vec2>	uvs;
 
 	mlm::vec3				center;
+	mlm::vec3				position;
 
 	bool					multi_indexed = false;
 
@@ -42,6 +43,8 @@ public:
 	~Object();
 
 	const mlm::vec3					&get_center() const;
+	const mlm::vec3					&get_position() const;
+	void							set_position(const mlm::vec3 &v);
 
 	const std::vector<Vertex>		&get_vertices() const;
 	const std::vector<GLuint>		&get_indices() const;
