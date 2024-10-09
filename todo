@@ -32,6 +32,14 @@
 	+ correctly apply texture to 42.obj (kinda)
 	+ accept bmp files with RGBA format
 
+- organize/refactor
+	- implement texture class
+		- replace old texture code
+
+	- give classes default constructors
+
+- implement resource manager
+
 + implement camera
 	+ implement lookat function
 	+ add camera controls to print out
@@ -53,8 +61,7 @@
 - create state struct/class that stores render settings
 
 - add input processing to object class
-	- add position
-	- create function
+	+ add position
 
 - documentation
 	- add comments to code

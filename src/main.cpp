@@ -80,17 +80,14 @@ int	main(int argc, char **argv)
 	float start_time = glfwGetTime();
 	Object obj(argv[1]);
 	const mlm::vec3 obj_center = obj.get_center();
-	std::cout << obj_center << std::endl;
 	std::vector<Vertex> vertices = obj.get_vertices();
 	std::vector<GLuint> indices = obj.get_indices();
-	std::cout << "indices size: " << indices.size() << std::endl;
-	std::cout << "vertices size: " << vertices.size() << std::endl;
 
 
 	GLFWwindow *window = initWindow(WIDTH, HEIGHT, "scop", NULL, NULL);
-
 	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 	glfwSetCursorPosCallback(window, mouse_callback);
+
 
 	Shader shader("./resources/shaders/default.vert", "./resources/shaders/default.frag");
 	GLuint texture = load_texture(argv[2]);
@@ -125,46 +122,46 @@ int	main(int argc, char **argv)
 	{
 		process_input(window);
 		g_delta_time = deltaTimeUpdate();
-		// glClearColor(v4.x, v4.y, v4.z, 1.0f);
 		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 		
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		shader.use();
-		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, texture);
 
 		if (texMode % 2 == 0 && texMix < 1.0f)
 		{
-			texMix += g_delta_time;
+			texMix += 1.0f * g_delta_time;
 		}
 		else if (texMode % 2 == 1 && texMix > 0.0f)
 		{
-			texMix -= g_delta_time;
+			texMix -= 1.0f * g_delta_time;
 		}
 		texMix = fminf32(fmaxf32(texMix, 0.0f), 1.0f);
 
 
+		angle += 45.0f * g_delta_time; // 45 degrees per second
 
 		mlm::mat4 view = camera.get_matrix();
+
 		mlm::mat4 projection = mlm::perspective(mlm::radians(FOV), (float)WIDTH / (float)HEIGHT, 0.1f, 100.0f);
+	
 		mlm::mat4 model(1.0f);
 		model = mlm::translate(model, obj_pos);
 		model = mlm::scale(model, obj_scale);
-
 		model = mlm::rotate(model, mlm::radians(90.0f), mlm::vec3(0.0f, 1.0f, 0.0f));
-		// model = mlm::rotate(model, mlm::radians(-30.0f), mlm::vec3(1.0f, 0.0f, 0.0f));
 		model = mlm::rotate(model, mlm::radians(angle), mlm::vec3(0.0f, 1.0f, 0.0f));
-		// m = mlm::scale(m, mlm::vec3(dimValue));
-		// m = mlm::rotate(m, mlm::radians(angle), mlm::vec3(1.0f, 1.0f, 0.0f));
-		angle += 45.0f * g_delta_time;
+	
+		shader.use();
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, texture);
 		shader.setFloat("texMix", texMix);
 		shader.setMat4("model", model);
 		shader.setMat4("projection", projection);
 		shader.setMat4("view", view);
 		mainVao.Bind();
+	
 		glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
 		glfwSwapBuffers(window);
+	
 		glfwPollEvents();
 	}
 	mainEbo.Delete();
