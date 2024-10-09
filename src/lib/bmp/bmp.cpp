@@ -168,7 +168,7 @@ static bool	bmp_read_data_32bpp(int fd, bmp_header_t *hdr, bmp_t *bmp)
 		for (uint32_t x = 0; x < bmp->width; x++)
 		{
 			// The current index of the pixel is:
-			// amount of rows * length of row + the pixel in row * 3 bytes
+			// amount of rows * length of row + the pixel in row * 4 bytes
 			uint32_t i = i = (y * bmp->width + x) * bmp->pixel_size;
 			
 			// Here the pixels get converted from BGR to RGB

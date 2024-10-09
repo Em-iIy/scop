@@ -19,6 +19,7 @@ FILES_SRCS =	main.cpp \
 				textures.cpp \
 				Object.cpp \
 				Camera.cpp \
+				input.cpp \
 
 FILES_OBJS = $(FILES_SRCS:.cpp=.o)
 

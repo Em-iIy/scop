@@ -50,6 +50,12 @@
 	? FOV
 	? light source
 
+- create state struct/class that stores render settings
+
+- add input processing to object class
+	- add position
+	- create function
+
 - documentation
 	- add comments to code
 	- create readme
