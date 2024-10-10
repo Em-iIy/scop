@@ -86,11 +86,7 @@ void Object::fill_vertices()
 		}
 		if (this->multi_indexed == true)
 		{
-			if (this->normal_indices[i] >= this->normals.size())
-			{
-				throw std::runtime_error("Index out of range");
-			}
-			if (this->uv_indices[i] >= this->uvs.size())
+			if (this->normal_indices[i] >= this->normals.size() || this->uv_indices[i] >= this->uvs.size())
 			{
 				throw std::runtime_error("Index out of range");
 			}
@@ -126,21 +122,6 @@ void Object::fill_vertices()
 			vertex_index_map[temp_vertex] = index;
 		}
 	}
-}
-
-const mlm::vec3	&Object::get_center() const
-{
-	return (this->center);
-}
-
-const mlm::vec3					&Object::get_position() const
-{
-	return (this->position);
-}
-
-void							Object::set_position(const mlm::vec3 &v)
-{
-	this->position = v;
 }
 
 
@@ -229,7 +210,9 @@ static void parse_face(std::vector<std::string> &params, std::vector<GLuint> &po
 
 void	Object::parse_line(std::string &line)
 {
-	std::vector<std::string> params = split(line, " ");
+	static std::vector<std::string> params;
+	params.reserve(16);
+	split(params, line, " ");
 	switch (check_token(params[0]))
 	{
 	case SKIP:
@@ -250,11 +233,11 @@ void	Object::parse_line(std::string &line)
 	default:
 		break;
 	}
+	params.clear();
 }
 
 // Resizes all temporary vectors to have a capacity of 0
 // This memory would get cleaned up by garbage collection, however this would only happen at the end.
-// 
 void	Object::clean_temp()
 {
 	uint64_t bytes_cleaned = this->pos.size() + this->normals.size() + this->uvs.size() + this->pos_indices.size() + this->normal_indices.size() + this->uv_indices.size();
@@ -273,7 +256,20 @@ void	Object::clean_temp()
 	this->uv_indices.shrink_to_fit();
 }
 
-Object::Object(const std::string &file_name): position(mlm::vec3(0.0f))
+Object::Object(): position(mlm::vec3(0.0f)), multi_indexed(false)
+{
+}
+
+Object::Object(const std::string &file_name): position(mlm::vec3(0.0f)), multi_indexed(false)
+{
+	this->load(file_name);
+}
+
+Object::~Object()
+{
+}
+
+void	Object::load(const std::string &file_name)
 {
 	std::cout << "loading " << file_name << "..." << std::endl;
 	char *data = read_file((file_name).c_str());
@@ -315,10 +311,6 @@ Object::Object(const std::string &file_name): position(mlm::vec3(0.0f))
 	this->clean_temp();
 }
 
-Object::~Object()
-{
-}
-
 const std::vector<Vertex>	&Object::get_vertices() const
 {
 	return (this->vertices);
@@ -327,5 +319,20 @@ const std::vector<Vertex>	&Object::get_vertices() const
 const std::vector<GLuint>	&Object::get_indices() const
 {
 	return (this->indices);
+}
+
+const mlm::vec3	&Object::get_center() const
+{
+	return (this->center);
+}
+
+const mlm::vec3	&Object::get_position() const
+{
+	return (this->position);
+}
+
+void	Object::set_position(const mlm::vec3 &v)
+{
+	this->position = v;
 }
 

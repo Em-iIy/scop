@@ -31,7 +31,7 @@ private:
 	mlm::vec3				center;
 	mlm::vec3				position;
 
-	bool					multi_indexed = false;
+	bool					multi_indexed;
 
 	void	parse_line(std::string &line);
 
@@ -41,8 +41,11 @@ private:
 
 	void	clean_temp();
 public:
+	Object();
 	Object(const std::string &file_name);
 	~Object();
+
+	void							load(const std::string &file_name);
 
 	const mlm::vec3					&get_center() const;
 	const mlm::vec3					&get_position() const;

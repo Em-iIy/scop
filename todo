@@ -36,7 +36,7 @@
 	+ implement texture class
 		+ replace old texture code
 
-	- give classes default constructors
+	+ give classes default constructors
 
 - implement resource manager
 
