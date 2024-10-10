@@ -14,7 +14,7 @@ Created on: 06/09/2024
 #include "gl/Key.hpp"
 #include "gl/textures.hpp"
 
-char 		*read_file(const char *file_name);
+char 						*read_file(const char *file_name);
 
 std::vector<std::string>	split(const std::string &str, const std::string &d);
 void						split(std::vector<std::string> &vect, const std::string &str, const std::string &d);

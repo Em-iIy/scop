@@ -7,5 +7,5 @@ Created on: 07/09/2024
 #include <GLFW/glfw3.h>
 #include <GLAD/glad.h>
 
-void	initGlfw(void);
-GLFWwindow	*initWindow(int width, int height, const char *title, GLFWmonitor *monitor, GLFWwindow *share);
+void	init_glfw(void);
+GLFWwindow	*init_window(int width, int height, const char *title, GLFWmonitor *monitor, GLFWwindow *share);

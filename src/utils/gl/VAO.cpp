@@ -12,28 +12,28 @@ VAO::VAO()
 }
 
 // Links a VBO to the VAO using a certain layout
-void VAO::LinkAtr(VBO& VBO, GLuint layout, GLuint n, GLenum type, GLsizeiptr stride, void *offset)
+void VAO::link_attr(VBO& VBO, GLuint layout, GLuint n, GLenum type, GLsizeiptr stride, void *offset)
 {
-	VBO.Bind();
+	VBO.bind();
 	glVertexAttribPointer(layout, n, type, GL_FALSE, stride, offset);
 	glEnableVertexAttribArray(layout);
-	VBO.Unbind();
+	VBO.unbind();
 }
 
 // Binds the VAO
-void VAO::Bind()
+void VAO::bind()
 {
 	glBindVertexArray(ID);
 }
 
 // Unbinds the VAO
-void VAO::Unbind()
+void VAO::unbind()
 {
 	glBindVertexArray(0);
 }
 
 // Deletes the VAO
-void VAO::Delete()
+void VAO::del()
 {
 	glDeleteVertexArrays(1, &ID);
 }

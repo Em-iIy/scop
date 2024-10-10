@@ -14,10 +14,10 @@ class Shader {
 		Shader(const char *vertexFileName, const char *fragmentFileName);
 		~Shader();
 		void use();
-		void Delete();
-		void setBool(const std::string &name, bool value) const;
-		void setFloat(const std::string &name, float value) const;
-		void setInt(const std::string &name, int value) const;
-		void setMat4(const std::string &name, mlm::mat4 &value) const;
+		void del();
+		void set_bool(const std::string &name, bool value) const;
+		void set_float(const std::string &name, float value) const;
+		void set_int(const std::string &name, int value) const;
+		void set_mat4(const std::string &name, mlm::mat4 &value) const;
 
 };

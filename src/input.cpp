@@ -14,8 +14,8 @@ Created on: 09/10/2024
 #define WIDTH 1920
 #define HEIGHT 1080
 
-int				texMode = 1;
-int				wfMode = 0;
+int				tex_mode = 1;
+int				wf_mode = 0;
 
 extern Camera	camera;
 extern float	g_delta_time;
@@ -35,15 +35,15 @@ static void	render_options(GLFWwindow *window)
 
 	if (one.is_pressed())
 	{
-		++wfMode;
-		if (wfMode % 2 == 0)
+		++wf_mode;
+		if (wf_mode % 2 == 0)
 			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 		else
 			glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	}
 	if (tab.is_pressed())
 	{
-		++texMode;
+		++tex_mode;
 	}
 	if (esc.is_pressed())
 	{
@@ -69,27 +69,27 @@ static void	camera_movement(GLFWwindow *window)
 
 	if (w.is_down())
 	{
-		camera.processKeyboard(FORWARD, g_delta_time);
+		camera.process_keyboard(FORWARD, g_delta_time);
 	}
 	if (a.is_down())
 	{
-		camera.processKeyboard(LEFT, g_delta_time);
+		camera.process_keyboard(LEFT, g_delta_time);
 	}
 	if (s.is_down())
 	{
-		camera.processKeyboard(BACKWARD, g_delta_time);
+		camera.process_keyboard(BACKWARD, g_delta_time);
 	}
 	if (d.is_down())
 	{
-		camera.processKeyboard(RIGHT, g_delta_time);
+		camera.process_keyboard(RIGHT, g_delta_time);
 	}
 	if (lshift.is_down())
 	{
-		camera.processKeyboard(DOWN, g_delta_time);
+		camera.process_keyboard(DOWN, g_delta_time);
 	}
 	if (space.is_down())
 	{
-		camera.processKeyboard(UP, g_delta_time);
+		camera.process_keyboard(UP, g_delta_time);
 	}
 }
 
@@ -154,27 +154,27 @@ void	process_input(GLFWwindow *window)
 	camera_movement(window);
 }
 
-void	mouse_callback(GLFWwindow *window, double xposIn, double yposIn)
+void	mouse_callback(GLFWwindow *window, double in_xpos, double in_ypos)
 {
-	static float	lastY = HEIGHT / 2.0f;
-	static float	lastX = WIDTH / 2.0f;
-	static bool		firstMouse = true;
+	static float	last_x = WIDTH / 2.0f;
+	static float	last_y = HEIGHT / 2.0f;
+	static bool		first_mouse = true;
 
-	float xpos = static_cast<float>(xposIn);
-	float ypos = static_cast<float>(yposIn);
+	float xpos = static_cast<float>(in_xpos);
+	float ypos = static_cast<float>(in_ypos);
 
 	(void)window;
-	if (firstMouse)
+	if (first_mouse)
 	{
-		lastX = xpos;
-		lastY = ypos;
-		firstMouse = false;
+		last_x = xpos;
+		last_y = ypos;
+		first_mouse = false;
 	}
-	float xoffset = xpos - lastX;
-	float yoffset = lastY - ypos;
+	float xoffset = xpos - last_x;
+	float yoffset = last_y - ypos;
 
-	lastX = xpos;
-	lastY = ypos;
+	last_x = xpos;
+	last_y = ypos;
 
-	camera.processMouseMovement(xoffset, yoffset, true);
+	camera.process_mouse_movement(xoffset, yoffset, true);
 }

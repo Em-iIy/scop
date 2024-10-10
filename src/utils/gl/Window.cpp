@@ -7,7 +7,7 @@ Created on: 07/09/2024
 #include <GLFW/glfw3.h>
 #include <iostream>
 
-void	initGlfw(void)
+void	init_glfw(void)
 {
 	if (!glfwInit())
 	{
@@ -22,7 +22,7 @@ void	initGlfw(void)
 #endif
 }
 
-GLFWwindow	*initWindow(int width, int height, const char *title, GLFWmonitor *monitor, GLFWwindow *share)
+GLFWwindow	*init_window(int width, int height, const char *title, GLFWmonitor *monitor, GLFWwindow *share)
 {
 	int x, y;
 	GLFWwindow	*window = glfwCreateWindow(width, height, title, monitor, share);

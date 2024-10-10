@@ -28,12 +28,12 @@ class Camera {
 		float		mouse_sensitivity;
 
 		void update();
-
+		
 	public:
 		Camera(mlm::vec3 in_pos = mlm::vec3(0.0f), mlm::vec3 in_up = mlm::vec3(0.0f, 1.0f, 0.0f), mlm::vec3 in_front = mlm::vec3(0.0f, 0.0f, 1.0f), const float &in_yaw = -90.0f, const float &in_pitch = 0.0f);
 		~Camera();
 
 		mlm::mat4	get_matrix() const;
-		void 		processKeyboard(Camera_Movement direction, float &delta_time);
-		void		processMouseMovement(float xoffset, float yoffset, bool constrainPitch);
+		void 		process_keyboard(Camera_Movement direction, float &delta_time);
+		void		process_mouse_movement(float x_offset, float y_offset, bool constrain_pitch);
 };

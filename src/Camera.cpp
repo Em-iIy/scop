@@ -40,7 +40,7 @@ mlm::mat4	Camera::get_matrix() const
 	return (mlm::lookat(this->pos, this->pos + this->front, this->up));
 }
 
-void 		Camera::processKeyboard(Camera_Movement direction, float &delta_time)
+void 		Camera::process_keyboard(Camera_Movement direction, float &delta_time)
 {
 	float velocity = this->move_speed * delta_time;
 	switch (direction)
@@ -68,15 +68,15 @@ void 		Camera::processKeyboard(Camera_Movement direction, float &delta_time)
 	}
 }
 
-void	Camera::processMouseMovement(float xoffset, float yoffset, bool constrainPitch)
+void	Camera::process_mouse_movement(float x_offset, float y_offset, bool constrain_pitch)
 {
-	xoffset *= this->mouse_sensitivity;
-	yoffset *= this->mouse_sensitivity;
+	x_offset *= this->mouse_sensitivity;
+	y_offset *= this->mouse_sensitivity;
 
-	this->yaw += xoffset;
-	this->pitch += yoffset;
+	this->yaw += x_offset;
+	this->pitch += y_offset;
 
-	if (constrainPitch)
+	if (constrain_pitch)
 	{
 		if (this->pitch > 89.0f)
 		{

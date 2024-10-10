@@ -38,6 +38,8 @@ private:
 	void	fill_vertices();
 
 	void	center_vertices();
+
+	void	clean_temp();
 public:
 	Object(const std::string &file_name);
 	~Object();

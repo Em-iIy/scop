@@ -14,18 +14,18 @@ namespace mlm {
 // [ 0										0										0										1 ]
 mat4	rotate(const mat4 &m, const float &θ, const vec3 &v)
 {
-	float	cosθ = cosf(θ);
-	float	sinθ = sinf(θ);
+	float	cos_θ = cosf(θ);
+	float	sin_θ = sinf(θ);
 
 	vec3	axis = normalize(v);
-	vec3	tempSin(sinθ * axis);
-	vec3	tempCos((1 - cosθ) * axis);
+	vec3	temp_sin(sin_θ * axis);
+	vec3	temp_cos((1 - cos_θ) * axis);
 
 	return {
 		m * mat4(
-			vec4(cosθ + axis.x * tempCos.x, axis.x * tempCos.y - tempSin.z, axis.x * tempCos.z + tempSin.y, 0.0f),
-			vec4(axis.x * tempCos.y + tempSin.z, cosθ + axis.y * tempCos.y, axis.y * tempCos.z - tempSin.x, 0.0f),
-			vec4(axis.x * tempCos.z - tempSin.y, axis.y * tempCos.z + tempSin.x, cosθ + axis.z * tempCos.z, 0.0f),
+			vec4(cos_θ + axis.x * temp_cos.x, axis.x * temp_cos.y - temp_sin.z, axis.x * temp_cos.z + temp_sin.y, 0.0f),
+			vec4(axis.x * temp_cos.y + temp_sin.z, cos_θ + axis.y * temp_cos.y, axis.y * temp_cos.z - temp_sin.x, 0.0f),
+			vec4(axis.x * temp_cos.z - temp_sin.y, axis.y * temp_cos.z + temp_sin.x, cos_θ + axis.z * temp_cos.z, 0.0f),
 			vec4(0.0f, 0.0f, 0.0f, 1.0f)
 		)
 	};

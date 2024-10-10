@@ -24,26 +24,26 @@ EBO::EBO(GLuint* indices, GLsizeiptr size)
 }
 
 
-void EBO::Update(std::vector<uint> &indices)
+void EBO::update(std::vector<uint> &indices)
 {
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ID);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(uint), indices.data(), GL_STATIC_DRAW);
 }
 
 // Binds the EBO
-void EBO::Bind()
+void EBO::bind()
 {
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ID);
 }
 
 // Unbinds the EBO
-void EBO::Unbind()
+void EBO::unbind()
 {
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 }
 
 // Deletes the EBO
-void EBO::Delete()
+void EBO::del()
 {
 	glDeleteBuffers(1, &ID);
 }

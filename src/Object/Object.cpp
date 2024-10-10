@@ -74,6 +74,7 @@ static bool	find_vertex_index(std::map<Vertex, GLuint> &vertex_index_map, Vertex
 void Object::fill_vertices()
 {
 	std::map<Vertex, GLuint> vertex_index_map;
+	
 	Vertex temp_vertex;
 	this->indices.reserve(this->pos_indices.size());
 	for (uint i = 0; i < this->pos_indices.size(); ++i)
@@ -104,7 +105,7 @@ void Object::fill_vertices()
 		else
 		{
 			mlm::vec3 pos = this->pos[this->pos_indices[i]];
-			// temp solution for if the obj file doens't contain any normals or uv coordinates
+			// solution for if the obj file doens't contain any normals or uv coordinates
 			temp_vertex = {
 				.pos = pos,
 				.normal = pos,
@@ -146,14 +147,14 @@ void							Object::set_position(const mlm::vec3 &v)
 void	Object::center_vertices()
 {
 	this->center = mlm::vec3(0.0f);
-	for (std::vector<mlm::vec3>::iterator it = this->pos.begin(); it != this->pos.end(); it++)
+	for (mlm::vec3 &v : this->pos)
 	{
-		this->center += *it;
+		this->center += v;
 	}
 	this->center /= this->pos.size();
-	for (std::vector<mlm::vec3>::iterator it = this->pos.begin(); it != this->pos.end(); it++)
+	for (mlm::vec3 &v : this->pos)
 	{
-		*it -= this->center;
+		v -= this->center;
 	}
 }
 
@@ -177,11 +178,18 @@ static void	parse_uv(std::vector<std::string> &params, std::vector<mlm::vec2> &u
 
 static void parse_triangle(std::string &idx1, std::string &idx2, std::string &idx3, std::vector<GLuint> &pos_indices, std::vector<GLuint> &normal_indices, std::vector<GLuint> &uv_indices)
 {
+	static std::vector<std::string> split_idx1;
+	static std::vector<std::string> split_idx2;
+	static std::vector<std::string> split_idx3;
+	split_idx1.reserve(3);
+	split_idx2.reserve(3);
+	split_idx3.reserve(3);
+
 	if (idx1.find('/') != std::string::npos)
 	{
-		std::vector<std::string> split_idx1 = split(idx1, "/");
-		std::vector<std::string> split_idx2 = split(idx2, "/");
-		std::vector<std::string> split_idx3 = split(idx3, "/");
+		split(split_idx1, idx1, "/");
+		split(split_idx2, idx2, "/");
+		split(split_idx3, idx3, "/");
 		if (split_idx1.size() != 3 || split_idx2.size() != 3 || split_idx3.size() != 3)
 		{
 			throw std::runtime_error("Invalid face");
@@ -195,6 +203,9 @@ static void parse_triangle(std::string &idx1, std::string &idx2, std::string &id
 		normal_indices.push_back(stoi(split_idx1[2]) - 1);
 		normal_indices.push_back(stoi(split_idx2[2]) - 1);
 		normal_indices.push_back(stoi(split_idx3[2]) - 1);
+		split_idx1.clear();
+		split_idx2.clear();
+		split_idx3.clear();
 	}
 	else
 	{
@@ -241,6 +252,26 @@ void	Object::parse_line(std::string &line)
 	}
 }
 
+// Resizes all temporary vectors to have a capacity of 0
+// This memory would get cleaned up by garbage collection, however this would only happen at the end.
+// 
+void	Object::clean_temp()
+{
+	uint64_t bytes_cleaned = this->pos.size() + this->normals.size() + this->uvs.size() + this->pos_indices.size() + this->normal_indices.size() + this->uv_indices.size();
+	std::cout << "Bytes freed: " << bytes_cleaned << std::endl;
+	this->pos.clear();
+	this->pos.shrink_to_fit();
+	this->normals.clear();
+	this->normals.shrink_to_fit();
+	this->uvs.clear();
+	this->uvs.shrink_to_fit();
+	this->pos_indices.clear();
+	this->pos_indices.shrink_to_fit();
+	this->normal_indices.clear();
+	this->normal_indices.shrink_to_fit();
+	this->uv_indices.clear();
+	this->uv_indices.shrink_to_fit();
+}
 
 Object::Object(const std::string &file_name): position(mlm::vec3(0.0f))
 {
@@ -281,12 +312,7 @@ Object::Object(const std::string &file_name): position(mlm::vec3(0.0f))
 		throw std::exception();
 	}
 	free(data);
-	this->pos.clear();
-	this->normals.clear();
-	this->uvs.clear();
-	this->pos_indices.clear();
-	this->normal_indices.clear();
-	this->uv_indices.clear();
+	this->clean_temp();
 }
 
 Object::~Object()

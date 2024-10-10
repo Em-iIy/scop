@@ -20,8 +20,7 @@ Created on: 06/09/2024
 #define MOVE_SPEED 10.0f
 #define SCALE_SPEED 5.0f
 
-extern int			texMode;
-extern int			wfMode;
+extern int	tex_mode;
 float		g_delta_time = 0.0f;
 mlm::vec3	obj_pos = mlm::vec3(0.0f, 0.0f, -10.0f);
 mlm::vec3	obj_scale = mlm::vec3(1.0f);
@@ -29,7 +28,7 @@ mlm::vec3	obj_scale = mlm::vec3(1.0f);
 Camera camera;
 
 
-float deltaTimeUpdate(void)
+float delta_time_update(void)
 {
 	static float last_frame = 0.0f;
 	float current_frame = static_cast<float>(glfwGetTime());
@@ -75,7 +74,7 @@ int	main(int argc, char **argv)
 	}
 	try
 	{
-	initGlfw();
+	init_glfw();
 
 	float start_time = glfwGetTime();
 	Object obj(argv[1]);
@@ -84,32 +83,31 @@ int	main(int argc, char **argv)
 	std::vector<GLuint> indices = obj.get_indices();
 
 
-	GLFWwindow *window = initWindow(WIDTH, HEIGHT, "scop", NULL, NULL);
+	GLFWwindow *window = init_window(WIDTH, HEIGHT, "scop", NULL, NULL);
 	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 	glfwSetCursorPosCallback(window, mouse_callback);
 
 
 	Shader shader("./resources/shaders/default.vert", "./resources/shaders/default.frag");
-	// GLuint texture = load_texture(argv[2]);
 	Tex2d	texture;
 	texture.load(argv[2]);
 	shader.use();
-	shader.setInt("main_tex", 0);
+	shader.set_int("main_tex", 0);
 
 
 
 	VAO mainVao;
-	mainVao.Bind();
+	mainVao.bind();
 
 	VBO mainVbo((GLfloat *)vertices.data(), vertices.size() * sizeof(Vertex));
 	VBO normalsVbo((GLfloat *)vertices.data(), vertices.size() * sizeof(Vertex));
 	EBO mainEbo((GLuint *)indices.data(), indices.size() * sizeof(GLuint));
 
-	mainVao.LinkAtr(mainVbo, 0, 3, GL_FLOAT, sizeof(Vertex), (void *)0);
-	mainVao.LinkAtr(mainVbo, 1, 3, GL_FLOAT, sizeof(Vertex), (void *)(3 * sizeof(GLfloat)));
-	mainVao.LinkAtr(mainVbo, 2, 3, GL_FLOAT, sizeof(Vertex), (void *)(6 * sizeof(GLfloat)));
-	mainVao.LinkAtr(mainVbo, 3, 2, GL_FLOAT, sizeof(Vertex), (void *)(9 * sizeof(GLfloat)));
-	mainVao.Unbind();
+	mainVao.link_attr(mainVbo, 0, 3, GL_FLOAT, sizeof(Vertex), (void *)0);
+	mainVao.link_attr(mainVbo, 1, 3, GL_FLOAT, sizeof(Vertex), (void *)(3 * sizeof(GLfloat)));
+	mainVao.link_attr(mainVbo, 2, 3, GL_FLOAT, sizeof(Vertex), (void *)(6 * sizeof(GLfloat)));
+	mainVao.link_attr(mainVbo, 3, 2, GL_FLOAT, sizeof(Vertex), (void *)(9 * sizeof(GLfloat)));
+	mainVao.unbind();
 
 	float angle = 0.0f;
 	float texMix = 0.0f;
@@ -123,17 +121,17 @@ int	main(int argc, char **argv)
 	while (!glfwWindowShouldClose(window))
 	{
 		process_input(window);
-		g_delta_time = deltaTimeUpdate();
+		g_delta_time = delta_time_update();
 		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 		
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 
-		if (texMode % 2 == 0 && texMix < 1.0f)
+		if (tex_mode % 2 == 0 && texMix < 1.0f)
 		{
 			texMix += 1.0f * g_delta_time;
 		}
-		else if (texMode % 2 == 1 && texMix > 0.0f)
+		else if (tex_mode % 2 == 1 && texMix > 0.0f)
 		{
 			texMix -= 1.0f * g_delta_time;
 		}
@@ -155,21 +153,21 @@ int	main(int argc, char **argv)
 		shader.use();
 		glActiveTexture(GL_TEXTURE0);
 		texture.bind();
-		shader.setFloat("texMix", texMix);
-		shader.setMat4("model", model);
-		shader.setMat4("projection", projection);
-		shader.setMat4("view", view);
-		mainVao.Bind();
+		shader.set_float("texMix", texMix);
+		shader.set_mat4("model", model);
+		shader.set_mat4("projection", projection);
+		shader.set_mat4("view", view);
+		mainVao.bind();
 	
 		glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
 		glfwSwapBuffers(window);
 	
 		glfwPollEvents();
 	}
-	mainEbo.Delete();
-	mainVbo.Delete();
-	mainVao.Delete();
-	shader.Delete();
+	mainEbo.del();
+	mainVbo.del();
+	mainVao.del();
+	shader.del();
 	texture.del();
 	// glfwTerminate(); // Can cause leaks occasionally
 	}
