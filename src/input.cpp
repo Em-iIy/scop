@@ -6,10 +6,7 @@ Created on: 09/10/2024
 #include <GLFW/glfw3.h>
 
 #include "Camera.hpp"
-
-// include defines from one place/accessible through config
-#define MOVE_SPEED 10.0f
-#define SCALE_SPEED 5.0f
+#include "Object/Object.hpp"
 
 #define WIDTH 1920
 #define HEIGHT 1080
@@ -18,6 +15,7 @@ int				tex_mode = 1;
 int				wf_mode = 0;
 
 extern Camera	camera;
+extern Object	obj;
 extern float	g_delta_time;
 
 extern mlm::vec3	obj_pos;
@@ -115,35 +113,35 @@ static void	object_movement(GLFWwindow *window)
 
 	if (up.is_down())
 	{
-		obj_pos += mlm::vec3(0.0f, 0.0f, -1.0f) * g_delta_time * MOVE_SPEED;
+		obj.process_keyboard(OBJ_FORWARD, g_delta_time);
 	}
 	if (left.is_down())
 	{
-		obj_pos += mlm::vec3(-1.0f, 0.0f, 0.0f) * g_delta_time * MOVE_SPEED;
+		obj.process_keyboard(OBJ_LEFT, g_delta_time);
 	}
 	if (down.is_down())
 	{
-		obj_pos += mlm::vec3(0.0f, 0.0f, 1.0f) * g_delta_time * MOVE_SPEED;
+		obj.process_keyboard(OBJ_BACKWARD, g_delta_time);
 	}
 	if (right.is_down())
 	{
-		obj_pos += mlm::vec3(1.0f, 0.0f, 0.0f) * g_delta_time * MOVE_SPEED;
+		obj.process_keyboard(OBJ_RIGHT, g_delta_time);
 	}
 	if (rctrl.is_down())
 	{
-		obj_pos += mlm::vec3(0.0f, -1.0f, 0.0f) * g_delta_time * MOVE_SPEED;
+		obj.process_keyboard(OBJ_DOWN, g_delta_time);
 	}
 	if (rshift.is_down())
 	{
-		obj_pos += mlm::vec3(0.0f, 1.0f, 0.0f) * g_delta_time * MOVE_SPEED;
+		obj.process_keyboard(OBJ_UP, g_delta_time);
 	}
 	if (plus.is_down())
 	{
-		obj_scale += g_delta_time * SCALE_SPEED;
+		obj.process_keyboard(OBJ_SCALE_UP, g_delta_time);
 	}
 	if (minus.is_down())
 	{
-		obj_scale -= g_delta_time * SCALE_SPEED;
+		obj.process_keyboard(OBJ_SCALE_DOWN, g_delta_time);
 	}
 }
 

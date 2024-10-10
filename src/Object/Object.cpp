@@ -311,6 +311,41 @@ void	Object::load(const std::string &file_name)
 	this->clean_temp();
 }
 
+void Object::process_keyboard(e_object_movement direction, float &delta_time)
+{
+	float velocity = MOVE_SPEED * delta_time;
+
+	switch (direction)
+	{
+	case OBJ_FORWARD:
+		this->position += mlm::vec3(0.0f, 0.0f, -1.0f) * velocity;
+		break ;
+	case OBJ_BACKWARD:
+		this->position -= mlm::vec3(0.0f, 0.0f, -1.0f) * velocity;
+		break ;
+	case OBJ_LEFT:
+		this->position += mlm::vec3(-1.0f, 0.0f, 0.0f) * velocity;
+		break ;
+	case OBJ_RIGHT:
+		this->position -= mlm::vec3(-1.0f, 0.0f, 0.0f) * velocity;
+		break ;
+	case OBJ_UP:
+		this->position += mlm::vec3(0.0f, 1.0f, 0.0f) * velocity;
+		break ;
+	case OBJ_DOWN:
+		this->position -= mlm::vec3(0.0f, 1.0f, 0.0f) * velocity;
+		break ;
+	case OBJ_SCALE_UP:
+		this->scale += SCALE_SPEED * delta_time;
+		break ;
+	case OBJ_SCALE_DOWN:
+		this->scale -= SCALE_SPEED * delta_time;
+		break ;
+	default:
+		break;
+	}
+}
+
 const std::vector<Vertex>	&Object::get_vertices() const
 {
 	return (this->vertices);
@@ -334,5 +369,15 @@ const mlm::vec3	&Object::get_position() const
 void	Object::set_position(const mlm::vec3 &v)
 {
 	this->position = v;
+}
+
+const mlm::vec3	&Object::get_scale() const
+{
+	return (this->scale);
+}
+
+void	Object::set_scale(const mlm::vec3 &v)
+{
+	this->scale = v;
 }
 

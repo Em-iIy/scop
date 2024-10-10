@@ -60,8 +60,9 @@
 
 - create state struct/class that stores render settings
 
-- add input processing to object class
++ add input processing to object class
 	+ add position
+	+ add scale
 
 - documentation
 	- add comments to code

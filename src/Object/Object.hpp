@@ -6,12 +6,26 @@
 #include <emlm/emlm.hpp>
 #include "utils.hpp"
 
+#define MOVE_SPEED 10.0f
+#define SCALE_SPEED 5.0f
+
 enum e_obj_tok {
 	SKIP,
 	VERTEX,
 	NORMAL,
 	TEX,
 	FACE,
+};
+
+enum e_object_movement {
+	OBJ_FORWARD,
+	OBJ_BACKWARD,
+	OBJ_LEFT,
+	OBJ_RIGHT,
+	OBJ_UP,
+	OBJ_DOWN,
+	OBJ_SCALE_UP,
+	OBJ_SCALE_DOWN
 };
 
 class Object
@@ -30,6 +44,7 @@ private:
 
 	mlm::vec3				center;
 	mlm::vec3				position;
+	mlm::vec3				scale;
 
 	bool					multi_indexed;
 
@@ -46,10 +61,14 @@ public:
 	~Object();
 
 	void							load(const std::string &file_name);
+	
+	void 							process_keyboard(e_object_movement direction, float &delta_time);
 
 	const mlm::vec3					&get_center() const;
 	const mlm::vec3					&get_position() const;
 	void							set_position(const mlm::vec3 &v);
+	const mlm::vec3					&get_scale() const;
+	void							set_scale(const mlm::vec3 &v);
 
 	const std::vector<Vertex>		&get_vertices() const;
 	const std::vector<GLuint>		&get_indices() const;

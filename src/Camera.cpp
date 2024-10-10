@@ -21,7 +21,7 @@ Camera::Camera(mlm::vec3 in_pos, mlm::vec3 in_up, mlm::vec3 in_front, const floa
 
 Camera::~Camera() {}
 
-void Camera::update()
+void	Camera::update()
 {
 	float rad_yaw = mlm::radians(this->yaw);
 	float rad_pitch = mlm::radians(this->pitch);
@@ -40,12 +40,12 @@ mlm::mat4	Camera::get_matrix() const
 	return (mlm::lookat(this->pos, this->pos + this->front, this->up));
 }
 
-void 		Camera::process_keyboard(Camera_Movement direction, float &delta_time)
+void	Camera::process_keyboard(e_camera_movement direction, float &delta_time)
 {
 	float velocity = this->move_speed * delta_time;
 	switch (direction)
 	{
-		case FORWARD:
+	case FORWARD:
 		this->pos += this->front * velocity;
 		break ;
 	case BACKWARD:

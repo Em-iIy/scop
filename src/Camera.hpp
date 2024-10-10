@@ -2,7 +2,7 @@
 
 #include <emlm/emlm.hpp>
 
-enum Camera_Movement {
+enum e_camera_movement {
 	FORWARD,
 	BACKWARD,
 	LEFT,
@@ -34,6 +34,6 @@ class Camera {
 		~Camera();
 
 		mlm::mat4	get_matrix() const;
-		void 		process_keyboard(Camera_Movement direction, float &delta_time);
+		void 		process_keyboard(e_camera_movement direction, float &delta_time);
 		void		process_mouse_movement(float x_offset, float y_offset, bool constrain_pitch);
 };

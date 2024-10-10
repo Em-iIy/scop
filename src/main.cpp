@@ -17,15 +17,12 @@ Created on: 06/09/2024
 #define WIDTH 1920
 #define HEIGHT 1080
 #define FOV	45.0f
-#define MOVE_SPEED 10.0f
-#define SCALE_SPEED 5.0f
 
 extern int	tex_mode;
 float		g_delta_time = 0.0f;
-mlm::vec3	obj_pos = mlm::vec3(0.0f, 0.0f, -10.0f);
-mlm::vec3	obj_scale = mlm::vec3(1.0f);
 
 Camera camera;
+Object obj;
 
 
 float delta_time_update(void)
@@ -77,8 +74,10 @@ int	main(int argc, char **argv)
 	init_glfw();
 
 	float start_time = glfwGetTime();
-	Object obj(argv[1]);
+	obj.load(argv[1]);
 	const mlm::vec3 obj_center = obj.get_center();
+	obj.set_position(mlm::vec3(0.0f, 0.0f, -10.0f));
+	obj.set_scale(mlm::vec3(1.0f));
 	std::vector<Vertex> vertices = obj.get_vertices();
 	std::vector<GLuint> indices = obj.get_indices();
 
@@ -145,8 +144,8 @@ int	main(int argc, char **argv)
 		mlm::mat4 projection = mlm::perspective(mlm::radians(FOV), (float)WIDTH / (float)HEIGHT, 0.1f, 100.0f);
 	
 		mlm::mat4 model(1.0f);
-		model = mlm::translate(model, obj_pos);
-		model = mlm::scale(model, obj_scale);
+		model = mlm::translate(model, obj.get_position());
+		model = mlm::scale(model, obj.get_scale());
 		model = mlm::rotate(model, mlm::radians(90.0f), mlm::vec3(0.0f, 1.0f, 0.0f));
 		model = mlm::rotate(model, mlm::radians(angle), mlm::vec3(0.0f, 1.0f, 0.0f));
 	
