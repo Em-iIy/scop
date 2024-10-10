@@ -99,7 +99,6 @@ int	main(int argc, char **argv)
 	mainVao.bind();
 
 	VBO mainVbo((GLfloat *)vertices.data(), vertices.size() * sizeof(Vertex));
-	VBO normalsVbo((GLfloat *)vertices.data(), vertices.size() * sizeof(Vertex));
 	EBO mainEbo((GLuint *)indices.data(), indices.size() * sizeof(GLuint));
 
 	mainVao.link_attr(mainVbo, 0, 3, GL_FLOAT, sizeof(Vertex), (void *)0);
