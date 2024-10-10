@@ -9,3 +9,25 @@ Created on: 09/09/2024
 
 uint	load_texture(const char *img);
 void	delete_texture(uint texture);
+
+class Tex2d
+{
+private:
+	GLuint	ID;
+
+	GLint	wrap_s;
+	GLint	wrap_t;
+	GLint	filter_min;
+	GLint	filter_mag;
+
+	GLint	format;
+public:
+	Tex2d();
+	~Tex2d();
+
+	void	load(const char *img);
+	void	load(const std::string &img);
+
+	void	bind();
+	void	del();
+};

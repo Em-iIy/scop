@@ -90,7 +90,9 @@ int	main(int argc, char **argv)
 
 
 	Shader shader("./resources/shaders/default.vert", "./resources/shaders/default.frag");
-	GLuint texture = load_texture(argv[2]);
+	// GLuint texture = load_texture(argv[2]);
+	Tex2d	texture;
+	texture.load(argv[2]);
 	shader.use();
 	shader.setInt("main_tex", 0);
 
@@ -152,7 +154,7 @@ int	main(int argc, char **argv)
 	
 		shader.use();
 		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, texture);
+		texture.bind();
 		shader.setFloat("texMix", texMix);
 		shader.setMat4("model", model);
 		shader.setMat4("projection", projection);
@@ -168,7 +170,7 @@ int	main(int argc, char **argv)
 	mainVbo.Delete();
 	mainVao.Delete();
 	shader.Delete();
-	delete_texture(texture);
+	texture.del();
 	// glfwTerminate(); // Can cause leaks occasionally
 	}
 	catch(const std::exception& e)

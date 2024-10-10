@@ -33,8 +33,8 @@
 	+ accept bmp files with RGBA format
 
 - organize/refactor
-	- implement texture class
-		- replace old texture code
+	+ implement texture class
+		+ replace old texture code
 
 	- give classes default constructors
 
