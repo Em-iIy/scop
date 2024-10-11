@@ -49,7 +49,9 @@ EMLM = $(DIR_EMLM)libmlm.a
 CC = c++
 CFLAGS = -std=c++11
 CFLAGS += -Wall -Wextra -Werror
+CFLAGS += -O3
 # CFLAGS += -g -fsanitize=address
+
 UNAME = $(shell uname)
 
 # Linux flags

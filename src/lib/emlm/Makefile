@@ -32,6 +32,8 @@ OBJS = $(FILES_OBJS:%=$(DIR_OBJS)%)
 
 CC = g++
 CFLAGS = -Wall -Wextra -Werror
+CFLAGS += -O3
+# CFLAGS += -fsanitize=address -g
 
 all:
 	@$(MAKE) $(NAME) -j4
