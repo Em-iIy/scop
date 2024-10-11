@@ -112,13 +112,13 @@ void Object::fill_vertices()
 		}
 		if (find_vertex_index(vertex_index_map, temp_vertex, index) == true)
 		{
-			this->indices.push_back(index);
+			this->indices.emplace_back(index);
 		}
 		else
 		{
-			this->vertices.push_back(temp_vertex);
+			this->vertices.emplace_back(temp_vertex);
 			index = this->vertices.size() - 1;
-			this->indices.push_back(index);
+			this->indices.emplace_back(index);
 			vertex_index_map[temp_vertex] = index;
 		}
 	}
@@ -145,7 +145,7 @@ static void	parse_vector(std::vector<std::string> &params, std::vector<mlm::vec3
 	{
 		throw std::runtime_error("Invalid vector");
 	}
-	vect.push_back(mlm::vec3(stof(params[1]), stof(params[2]), stof(params[3])));
+	vect.emplace_back(mlm::vec3(stof(params[1]), stof(params[2]), stof(params[3])));
 }
 
 static void	parse_uv(std::vector<std::string> &params, std::vector<mlm::vec2> &uvs)
@@ -154,7 +154,7 @@ static void	parse_uv(std::vector<std::string> &params, std::vector<mlm::vec2> &u
 	{
 		throw std::runtime_error("Invalid texture uv");
 	}
-	uvs.push_back(mlm::vec2(stof(params[1]), stof(params[2])));
+	uvs.emplace_back(mlm::vec2(stof(params[1]), stof(params[2])));
 }
 
 static void parse_triangle(std::string &idx1, std::string &idx2, std::string &idx3, std::vector<GLuint> &pos_indices, std::vector<GLuint> &normal_indices, std::vector<GLuint> &uv_indices)
@@ -175,24 +175,24 @@ static void parse_triangle(std::string &idx1, std::string &idx2, std::string &id
 		{
 			throw std::runtime_error("Invalid face");
 		}
-		pos_indices.push_back(stoi(split_idx1[0]) - 1);
-		pos_indices.push_back(stoi(split_idx2[0]) - 1);
-		pos_indices.push_back(stoi(split_idx3[0]) - 1);
-		uv_indices.push_back(stoi(split_idx1[1]) - 1);
-		uv_indices.push_back(stoi(split_idx2[1]) - 1);
-		uv_indices.push_back(stoi(split_idx3[1]) - 1);
-		normal_indices.push_back(stoi(split_idx1[2]) - 1);
-		normal_indices.push_back(stoi(split_idx2[2]) - 1);
-		normal_indices.push_back(stoi(split_idx3[2]) - 1);
+		pos_indices.emplace_back(stoi(split_idx1[0]) - 1);
+		pos_indices.emplace_back(stoi(split_idx2[0]) - 1);
+		pos_indices.emplace_back(stoi(split_idx3[0]) - 1);
+		uv_indices.emplace_back(stoi(split_idx1[1]) - 1);
+		uv_indices.emplace_back(stoi(split_idx2[1]) - 1);
+		uv_indices.emplace_back(stoi(split_idx3[1]) - 1);
+		normal_indices.emplace_back(stoi(split_idx1[2]) - 1);
+		normal_indices.emplace_back(stoi(split_idx2[2]) - 1);
+		normal_indices.emplace_back(stoi(split_idx3[2]) - 1);
 		split_idx1.clear();
 		split_idx2.clear();
 		split_idx3.clear();
 	}
 	else
 	{
-		pos_indices.push_back(stoi(idx1) - 1);
-		pos_indices.push_back(stoi(idx2) - 1);
-		pos_indices.push_back(stoi(idx3) - 1);
+		pos_indices.emplace_back(stoi(idx1) - 1);
+		pos_indices.emplace_back(stoi(idx2) - 1);
+		pos_indices.emplace_back(stoi(idx3) - 1);
 	}
 }
 

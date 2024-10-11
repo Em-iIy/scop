@@ -9,16 +9,16 @@ std::vector<std::string>	split(const std::string &str, const std::string &d)
 
 	if (find == std::string::npos)
 	{
-		ret.push_back(str);
+		ret.emplace_back(str);
 		return (ret);
 	}
 	while (find != std::string::npos)
 	{
-		ret.push_back(str.substr(pos, find - pos));
+		ret.emplace_back(str.substr(pos, find - pos));
 		pos = find + d.length();
 		find = str.find(d, pos);
 	}
-	ret.push_back(str.substr(pos));
+	ret.emplace_back(str.substr(pos));
 	return (ret);
 }
 
@@ -29,13 +29,13 @@ void	split(std::vector<std::string> &vect, const std::string &str, const std::st
 
 	if (find == std::string::npos)
 	{
-		vect.push_back(str);
+		vect.emplace_back(str);
 	}
 	while (find != std::string::npos)
 	{
-		vect.push_back(str.substr(pos, find - pos));
+		vect.emplace_back(str.substr(pos, find - pos));
 		pos = find + d.length();
 		find = str.find(d, pos);
 	}
-	vect.push_back(str.substr(pos));
+	vect.emplace_back(str.substr(pos));
 }
