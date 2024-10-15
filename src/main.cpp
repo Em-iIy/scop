@@ -20,10 +20,11 @@ Created on: 06/09/2024
 
 extern int	tex_mode;
 float		g_delta_time = 0.0f;
+int	width = WIDTH;
+int	height = HEIGHT;
 
 Camera camera;
 Object obj;
-
 
 float delta_time_update(void)
 {
@@ -33,7 +34,6 @@ float delta_time_update(void)
 	last_frame = current_frame;
 	return (delta_time);
 }
-
 
 void	m4print(const mlm::mat4 &m)
 {
@@ -61,6 +61,14 @@ static void	print_controls()
 	std::cout << "1:\t\t\tEnable wireframe mode" << std::endl;
 }
 
+void	framebuffer_size_callback(GLFWwindow *window, int in_width, int in_height)
+{
+	(void)window;
+	width = in_width;
+	height = in_height;
+	glViewport(0, 0, in_width, in_height);
+}
+
 int	main(int argc, char **argv)
 {
 	srand(time(NULL));
@@ -82,9 +90,10 @@ int	main(int argc, char **argv)
 	std::vector<GLuint> indices = obj.get_indices();
 
 
-	GLFWwindow *window = init_window(WIDTH, HEIGHT, "scop", NULL, NULL);
+	GLFWwindow *window = init_window(width, height, "scop", NULL, NULL);
 	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 	glfwSetCursorPosCallback(window, mouse_callback);
+	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 
 
 	Shader shader("./resources/shaders/default.vert", "./resources/shaders/default.frag");
@@ -140,7 +149,7 @@ int	main(int argc, char **argv)
 
 		mlm::mat4 view = camera.get_matrix();
 
-		mlm::mat4 projection = mlm::perspective(mlm::radians(FOV), (float)WIDTH / (float)HEIGHT, 0.1f, 100.0f);
+		mlm::mat4 projection = mlm::perspective(mlm::radians(FOV), (float)width / (float)height, 0.1f, 100.0f);
 	
 		mlm::mat4 model(1.0f);
 		model = mlm::translate(model, obj.get_position());
