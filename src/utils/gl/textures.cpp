@@ -5,8 +5,6 @@ Created on: 09/09/2024
 
 #include <GLAD/glad.h>
 #include "textures.hpp"
-#include "bmp/bmp.h"
-
 
 uint	load_texture(const char *img)
 {
@@ -67,15 +65,6 @@ void	Tex2d::load(const char *img)
 {
 	bmp_t	bmp;
 
-	glGenTextures(1, &this->ID);
-	this->bind();
-	
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, this->wrap_s);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, this->wrap_t);
-
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, this->filter_min);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, this->filter_mag);
-
 	// Load in the image
 	bmp = load_bmp(img);
 	if (!bmp.data)
@@ -83,6 +72,13 @@ void	Tex2d::load(const char *img)
 		std::cout << "load_texture: could not load: " << img << std::endl;
 		exit(EXIT_FAILURE);
 	}
+	this->load(bmp);
+	free_bmp(bmp);
+}
+
+void	Tex2d::load(const bmp_t &bmp)
+{
+
 	if (bmp.pixel_size == 3)
 	{
 		this->format = GL_RGB;
@@ -92,13 +88,20 @@ void	Tex2d::load(const char *img)
 		this->format = GL_RGBA;
 	}
 
+	glGenTextures(1, &this->ID);
+	this->bind();
+	
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, this->wrap_s);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, this->wrap_t);
+
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, this->filter_min);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, this->filter_mag);
+
 	// Assign the image to the generated texture
 	glTexImage2D(GL_TEXTURE_2D, 0, format, bmp.width, bmp.height, 0, format, GL_UNSIGNED_BYTE, bmp.data);
 
 	// Generate mipmap for the texture
 	glGenerateMipmap(this->ID);
-
-	free_bmp(bmp);
 }
 
 void	Tex2d::load(const std::string &img)

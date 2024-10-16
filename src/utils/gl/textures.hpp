@@ -7,6 +7,8 @@ Created on: 09/09/2024
 
 #include <iostream>
 
+#include "bmp/bmp.h"
+
 uint	load_texture(const char *img);
 void	delete_texture(uint texture);
 
@@ -26,6 +28,7 @@ public:
 	~Tex2d();
 
 	void	load(const char *img);
+	void	load(const bmp_t &bmp);
 	void	load(const std::string &img);
 
 	void	bind();

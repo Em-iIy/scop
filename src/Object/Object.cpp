@@ -262,14 +262,14 @@ Object::Object(): position(mlm::vec3(0.0f)), multi_indexed(false)
 
 Object::Object(const std::string &file_name): position(mlm::vec3(0.0f)), multi_indexed(false)
 {
-	this->load(file_name);
+	this->load_file(file_name);
 }
 
 Object::~Object()
 {
 }
 
-void	Object::load(const std::string &file_name)
+void	Object::load_file(const std::string &file_name)
 {
 	std::cout << "loading " << file_name << "..." << std::endl;
 	char *data = read_file((file_name).c_str());
@@ -279,27 +279,9 @@ void	Object::load(const std::string &file_name)
 		std::cerr << "Object: Could not open " << file_name << std::endl;
 		throw std::exception();
 	}
-	std::vector<std::string> lines = split(data, "\n");
 	try
 	{
-		for (i = 0; i < lines.size(); i++)
-		{
-			this->parse_line(lines[i]);
-		}
-		if (this->uv_indices.size() == 0 && this->normal_indices.size() == 0)
-		{
-			this->multi_indexed = false;
-		}
-		else if (this->uv_indices.size() == this->pos_indices.size() || this->normal_indices.size() == this->pos_indices.size())
-		{
-			this->multi_indexed = true;
-		}
-		else
-		{
-			throw std::runtime_error("Invalid face indexing");
-		}
-		this->center_vertices();
-		this->fill_vertices();
+		this->load(data);
 	}
 	catch(const std::runtime_error& e)
 	{
@@ -308,6 +290,30 @@ void	Object::load(const std::string &file_name)
 		throw std::exception();
 	}
 	free(data);
+}
+
+void	Object::load(const char *data)
+{
+	size_t i = 0;
+	std::vector<std::string> lines = split(data, "\n");
+	for (i = 0; i < lines.size(); i++)
+	{
+		this->parse_line(lines[i]);
+	}
+	if (this->uv_indices.size() == 0 && this->normal_indices.size() == 0)
+	{
+		this->multi_indexed = false;
+	}
+	else if (this->uv_indices.size() == this->pos_indices.size() || this->normal_indices.size() == this->pos_indices.size())
+	{
+		this->multi_indexed = true;
+	}
+	else
+	{
+		throw std::runtime_error("Invalid face indexing");
+	}
+	this->center_vertices();
+	this->fill_vertices();
 	this->clean_temp();
 }
 

@@ -22,6 +22,7 @@ FILES_SRCS =	main.cpp \
 				Object.cpp \
 				Camera.cpp \
 				input.cpp \
+				# Manager.cpp \
 
 FILES_OBJS = $(FILES_SRCS:.cpp=.o)
 

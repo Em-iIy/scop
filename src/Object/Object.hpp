@@ -60,7 +60,8 @@ public:
 	Object(const std::string &file_name);
 	~Object();
 
-	void							load(const std::string &file_name);
+	void							load_file(const std::string &file_name);
+	void							load(const char *data);
 	
 	void 							process_keyboard(e_object_movement direction, float &delta_time);
 

@@ -40,7 +40,7 @@ int	main(int argc, char **argv)
 	init_glfw();
 
 	float start_time = glfwGetTime();
-	obj.load(argv[1]);
+	obj.load_file(argv[1]);
 	const mlm::vec3 obj_center = obj.get_center();
 	obj.set_position(mlm::vec3(0.0f, 0.0f, -10.0f));
 	obj.set_scale(mlm::vec3(1.0f));

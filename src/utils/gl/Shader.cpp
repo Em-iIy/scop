@@ -15,8 +15,6 @@ Shader::Shader() {}
 
 Shader::Shader(const char *vertex_file_name, const char *fragment_file_name)
 {
-
-
 	char *vertex_source = read_file(vertex_file_name);
 	if (!vertex_source)
 		return ;
