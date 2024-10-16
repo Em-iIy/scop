@@ -26,40 +26,6 @@ int			g_height = HEIGHT;
 Camera camera;
 Object obj;
 
-float delta_time_update(void)
-{
-	static float last_frame = 0.0f;
-	float current_frame = static_cast<float>(glfwGetTime());
-	float delta_time = current_frame - last_frame;
-	last_frame = current_frame;
-	return (delta_time);
-}
-
-void	m4print(const mlm::mat4 &m)
-{
-	for (int i = 0; i < 4; ++i)
-	{
-		for (int j = 0; j < 4; ++j)
-			std::cout << m[j][i] << " ";
-		std::cout << std::endl;
-	}
-	std::cout << std::endl;
-}
-
-static void	print_controls()
-{
-	std::cout << "up/down arrow:\t\tMove object on z axis" << std::endl;
-	std::cout << "left/right arrow:\tMove object on x axis" << std::endl;
-	std::cout << "Right shift/Space:\tMove object on y axis" << std::endl;
-	std::cout << "-/+:\t\t\tScale object up and down" << std::endl;
-	std::cout << "W/S:\t\t\tMove camera on z axis" << std::endl;
-	std::cout << "A/D:\t\t\tMove camera on x axis" << std::endl;
-	std::cout << "Left shift/Space:\tMove camera on y axis" << std::endl;
-	std::cout << "Mouse:\t\t\tLook around" << std::endl;
-	std::cout << "esc:\t\t\tQuit program" << std::endl;
-	std::cout << "Tab:\t\t\tEnable texture mode" << std::endl;
-	std::cout << "1:\t\t\tEnable wireframe mode" << std::endl;
-}
 
 int	main(int argc, char **argv)
 {

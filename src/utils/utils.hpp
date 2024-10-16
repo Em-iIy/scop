@@ -18,3 +18,7 @@ char 						*read_file(const char *file_name);
 
 std::vector<std::string>	split(const std::string &str, const std::string &d);
 void						split(std::vector<std::string> &vect, const std::string &str, const std::string &d);
+
+float						delta_time_update(void);
+
+void						print_controls(void);
