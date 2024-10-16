@@ -18,10 +18,10 @@ Created on: 06/09/2024
 #define HEIGHT 1080
 #define FOV	45.0f
 
-extern int	tex_mode;
+int			tex_mode = 1;
 float		g_delta_time = 0.0f;
-int	width = WIDTH;
-int	height = HEIGHT;
+int			g_width = WIDTH;
+int			g_height = HEIGHT;
 
 Camera camera;
 Object obj;
@@ -61,14 +61,6 @@ static void	print_controls()
 	std::cout << "1:\t\t\tEnable wireframe mode" << std::endl;
 }
 
-void	framebuffer_size_callback(GLFWwindow *window, int in_width, int in_height)
-{
-	(void)window;
-	width = in_width;
-	height = in_height;
-	glViewport(0, 0, in_width, in_height);
-}
-
 int	main(int argc, char **argv)
 {
 	srand(time(NULL));
@@ -90,7 +82,7 @@ int	main(int argc, char **argv)
 	std::vector<GLuint> indices = obj.get_indices();
 
 
-	GLFWwindow *window = init_window(width, height, "scop", NULL, NULL);
+	GLFWwindow *window = init_window(g_width, g_height, "scop", NULL, NULL);
 	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 	glfwSetCursorPosCallback(window, mouse_callback);
 	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
@@ -101,8 +93,6 @@ int	main(int argc, char **argv)
 	texture.load(argv[2]);
 	shader.use();
 	shader.set_int("main_tex", 0);
-
-
 
 	VAO mainVao;
 	mainVao.bind();
@@ -149,7 +139,7 @@ int	main(int argc, char **argv)
 
 		mlm::mat4 view = camera.get_matrix();
 
-		mlm::mat4 projection = mlm::perspective(mlm::radians(FOV), (float)width / (float)height, 0.1f, 100.0f);
+		mlm::mat4 projection = mlm::perspective(mlm::radians(FOV), (float)g_width / (float)g_height, 0.1f, 100.0f);
 	
 		mlm::mat4 model(1.0f);
 		model = mlm::translate(model, obj.get_position());

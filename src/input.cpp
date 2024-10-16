@@ -11,18 +11,20 @@ Created on: 09/10/2024
 #define WIDTH 1920
 #define HEIGHT 1080
 
-int				tex_mode = 1;
-int				wf_mode = 0;
 
 extern Camera	camera;
 extern Object	obj;
+
+extern int		tex_mode;
 extern float	g_delta_time;
 
-extern mlm::vec3	obj_pos;
-extern mlm::vec3	obj_scale;
+extern int		g_width;
+extern int		g_height;
 
 static void	render_options(GLFWwindow *window)
 {
+	static int	wf_mode = 0;
+
 	static Key esc(window, GLFW_KEY_ESCAPE);
 	static Key one(window, GLFW_KEY_1);
 	static Key tab(window, GLFW_KEY_TAB);
@@ -175,4 +177,12 @@ void	mouse_callback(GLFWwindow *window, double in_xpos, double in_ypos)
 	last_y = ypos;
 
 	camera.process_mouse_movement(xoffset, yoffset, true);
+}
+
+void	framebuffer_size_callback(GLFWwindow *window, int width, int height)
+{
+	(void)window;
+	g_width = width;
+	g_height = height;
+	glViewport(0, 0, width, height);
 }
