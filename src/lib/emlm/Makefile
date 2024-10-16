@@ -30,7 +30,7 @@ SRCS = $(FILES_SRCS:%=$(DIR_SRCS)%)
 # ----------------------------------------Objects
 OBJS = $(FILES_OBJS:%=$(DIR_OBJS)%)
 
-CC = g++
+CC = c++
 CFLAGS = -Wall -Wextra -Werror
 CFLAGS += -O3
 # CFLAGS += -fsanitize=address -g
