@@ -6,7 +6,7 @@ Created on: 09/10/2024
 #include <GLFW/glfw3.h>
 
 #include "Camera.hpp"
-#include "Object/Object.hpp"
+#include "Object.hpp"
 #include "Manager.hpp"
 
 #define WIDTH 1920

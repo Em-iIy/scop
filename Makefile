@@ -37,7 +37,6 @@ vpath %.cpp	$(DIR_SRCS) \
 			$(DIR_SRCS)lib/bmp/ \
 			$(DIR_SRCS)utils/ \
 			$(DIR_SRCS)utils/gl/ \
-			$(DIR_SRCS)Object/ \
 
 # ----------------------------------------Sources
 SRCS = $(FILES_SRCS:%=$(DIR_SRCS)%)

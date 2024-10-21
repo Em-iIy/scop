@@ -12,7 +12,7 @@ Created on: 06/09/2024
 #include "Camera.hpp"
 #include "utils.hpp"
 #include "input.hpp"
-#include "Object/Object.hpp"
+#include "Object.hpp"
 #include "Manager.hpp"
 
 #define WIDTH 1920

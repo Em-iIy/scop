@@ -1,7 +1,7 @@
 #include <map>
 #include <string>
 
-#include "Object/Object.hpp"
+#include "Object.hpp"
 #include "utils/utils.hpp"
 
 class Manager {
