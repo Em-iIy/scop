@@ -31,6 +31,8 @@ public:
 	void	load(const bmp_t &bmp);
 	void	load(const std::string &img);
 
+	const GLuint	&get_ID() const; 
+
 	void	bind();
 	void	del();
 };

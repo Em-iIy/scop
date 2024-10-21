@@ -22,5 +22,9 @@ class Manager {
 		static void		load_shader(const std::string &name, const char *vertex_file_name, const char *fragment_file_name);
 		static void		load_object(const std::string &name, const char *file_name);
 
+		static Tex2d	&get_texture(const std::string &name);
+		static Shader	&get_shader(const std::string &name);
+		static Object	&get_object(const std::string &name);
 
+		static void		clear(void);
 };

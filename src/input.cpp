@@ -7,19 +7,20 @@ Created on: 09/10/2024
 
 #include "Camera.hpp"
 #include "Object/Object.hpp"
+#include "Manager.hpp"
 
 #define WIDTH 1920
 #define HEIGHT 1080
 
 
-extern Camera	camera;
-extern Object	obj;
+extern Camera		camera;
+extern std::string	current_object;
 
-extern int		tex_mode;
-extern float	g_delta_time;
+extern int			tex_mode;
+extern float		g_delta_time;
 
-extern int		g_width;
-extern int		g_height;
+extern int			g_width;
+extern int			g_height;
 
 static void	render_options(GLFWwindow *window)
 {
@@ -103,6 +104,8 @@ static void	object_movement(GLFWwindow *window)
 	static Key rctrl(window, GLFW_KEY_RIGHT_CONTROL);
 	static Key plus(window, GLFW_KEY_EQUAL); // for the button with the + on it
 	static Key minus(window, GLFW_KEY_MINUS);
+
+	Object	&obj = Manager::get_object(current_object);
 
 	up.update();
 	down.update();

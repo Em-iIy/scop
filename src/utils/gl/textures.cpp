@@ -109,6 +109,11 @@ void	Tex2d::load(const std::string &img)
 	this->load(img.c_str());
 }
 
+const GLuint	&Tex2d::get_ID() const
+{
+	return (this->ID);
+}
+
 void	Tex2d::bind()
 {
 	glBindTexture(GL_TEXTURE_2D, this->ID);

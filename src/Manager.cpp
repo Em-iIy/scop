@@ -1,5 +1,9 @@
 #include "Manager.hpp"
 
+std::map<std::string, Tex2d>	Manager::textures;
+std::map<std::string, Shader>	Manager::shaders;
+std::map<std::string, Object>	Manager::objects;
+
 Manager::Manager() {}
 
 void	Manager::load_texture_file(Tex2d &tex, const char *file_name)
@@ -72,3 +76,29 @@ void	Manager::load_object(const std::string &name, const char *file_name)
 	Manager::load_object_file(Manager::objects[name], file_name);
 }
 
+Tex2d	&Manager::get_texture(const std::string &name)
+{
+	return (Manager::textures[name]);
+}
+
+Shader	&Manager::get_shader(const std::string &name)
+{
+	return (Manager::shaders[name]);
+}
+
+Object	&Manager::get_object(const std::string &name)
+{
+	return (Manager::objects[name]);
+}
+
+void	Manager::clear(void)
+{
+	for (std::pair<const std::string, Tex2d> &tex : Manager::textures)
+	{
+		tex.second.del();
+	}
+	for (std::pair<const std::string, Shader> &shader : Manager::shaders)
+	{
+		shader.second.del();
+	}
+}

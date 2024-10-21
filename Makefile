@@ -22,7 +22,7 @@ FILES_SRCS =	main.cpp \
 				Object.cpp \
 				Camera.cpp \
 				input.cpp \
-				# Manager.cpp \
+				Manager.cpp \
 
 FILES_OBJS = $(FILES_SRCS:.cpp=.o)
 
@@ -53,7 +53,7 @@ CC = c++
 CFLAGS = -std=c++11
 CFLAGS += -Wall -Wextra -Werror
 CFLAGS += -O3
-# CFLAGS += -g -fsanitize=address
+CFLAGS += -g -fsanitize=address
 
 UNAME = $(shell uname)
 

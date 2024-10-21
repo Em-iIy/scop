@@ -13,6 +13,7 @@ Created on: 06/09/2024
 #include "utils.hpp"
 #include "input.hpp"
 #include "Object/Object.hpp"
+#include "Manager.hpp"
 
 #define WIDTH 1920
 #define HEIGHT 1080
@@ -24,8 +25,7 @@ int			g_width = WIDTH;
 int			g_height = HEIGHT;
 
 Camera camera;
-Object obj;
-
+std::string	current_object = "input";
 
 int	main(int argc, char **argv)
 {
@@ -39,13 +39,13 @@ int	main(int argc, char **argv)
 	{
 	init_glfw();
 
+	Manager::load_object("input", argv[1]);
+
 	float start_time = glfwGetTime();
-	obj.load_file(argv[1]);
-	const mlm::vec3 obj_center = obj.get_center();
-	obj.set_position(mlm::vec3(0.0f, 0.0f, -10.0f));
-	obj.set_scale(mlm::vec3(1.0f));
-	std::vector<Vertex> vertices = obj.get_vertices();
-	std::vector<GLuint> indices = obj.get_indices();
+	Manager::get_object("input").set_position(mlm::vec3(0.0f, 0.0f, -10.0f));
+	Manager::get_object("input").set_scale(mlm::vec3(1.0f));
+	const std::vector<Vertex> &vertices = Manager::get_object("input").get_vertices();
+	const std::vector<GLuint> &indices = Manager::get_object("input").get_indices();
 
 
 	GLFWwindow *window = init_window(g_width, g_height, "scop", NULL, NULL);
@@ -54,11 +54,11 @@ int	main(int argc, char **argv)
 	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 
 
-	Shader shader("./resources/shaders/default.vert", "./resources/shaders/default.frag");
-	Tex2d	texture;
-	texture.load(argv[2]);
-	shader.use();
-	shader.set_int("main_tex", 0);
+	Manager::load_shader("default", "./resources/shaders/default.vert", "./resources/shaders/default.frag");
+	Manager::load_texture("input", argv[2]);
+	std::cout << Manager::get_texture("input").get_ID() << std::endl;
+	Manager::get_shader("default").use();
+	Manager::get_shader("default").set_int("main_tex", 0);
 
 	VAO mainVao;
 	mainVao.bind();
@@ -108,18 +108,18 @@ int	main(int argc, char **argv)
 		mlm::mat4 projection = mlm::perspective(mlm::radians(FOV), (float)g_width / (float)g_height, 0.1f, 100.0f);
 	
 		mlm::mat4 model(1.0f);
-		model = mlm::translate(model, obj.get_position());
-		model = mlm::scale(model, obj.get_scale());
+		model = mlm::translate(model, Manager::get_object("input").get_position());
+		model = mlm::scale(model, Manager::get_object("input").get_scale());
 		model = mlm::rotate(model, mlm::radians(90.0f), mlm::vec3(0.0f, 1.0f, 0.0f));
 		model = mlm::rotate(model, mlm::radians(angle), mlm::vec3(0.0f, 1.0f, 0.0f));
 	
-		shader.use();
+		Manager::get_shader("default").use();
 		glActiveTexture(GL_TEXTURE0);
-		texture.bind();
-		shader.set_float("texMix", texMix);
-		shader.set_mat4("model", model);
-		shader.set_mat4("projection", projection);
-		shader.set_mat4("view", view);
+		Manager::get_texture("input").bind();
+		Manager::get_shader("default").set_float("texMix", texMix);
+		Manager::get_shader("default").set_mat4("model", model);
+		Manager::get_shader("default").set_mat4("projection", projection);
+		Manager::get_shader("default").set_mat4("view", view);
 		mainVao.bind();
 	
 		glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
@@ -130,8 +130,7 @@ int	main(int argc, char **argv)
 	mainEbo.del();
 	mainVbo.del();
 	mainVao.del();
-	shader.del();
-	texture.del();
+	Manager::clear();
 	// glfwTerminate(); // Can cause leaks occasionally
 	}
 	catch(const std::exception& e)
