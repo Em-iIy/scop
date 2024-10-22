@@ -34,6 +34,7 @@ class Camera {
 		~Camera();
 
 		mlm::mat4	get_matrix() const;
+		const float	&get_fov() const;
 		void 		process_keyboard(e_camera_movement direction, float &delta_time);
 		void		process_mouse_movement(float x_offset, float y_offset, bool constrain_pitch);
 };
