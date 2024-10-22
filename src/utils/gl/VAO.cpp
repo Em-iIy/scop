@@ -6,9 +6,14 @@ Created on: 07/09/2024
 #include "VAO.hpp"
 
 // Constructor that generates a VAO ID
-VAO::VAO()
+VAO::VAO() {}
+
+VAO::VAO(GLsizei size)
 {
-	glGenVertexArrays(1, &ID);
+	// remove this if this should create multiple vertex arrays
+	if (size != 1)
+		size = 1;
+	glGenVertexArrays(size, &ID);
 }
 
 // Links a VBO to the VAO using a certain layout

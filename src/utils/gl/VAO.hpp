@@ -14,6 +14,7 @@ public:
 	GLuint ID;
 	// Constructor that generates a VAO ID
 	VAO();
+	VAO(GLsizei size);
 
 	// Links a VBO to the VAO using a certain layout
 	void link_attr(VBO& VBO, GLuint layout, GLuint n, GLenum type, GLsizeiptr stride, void *offset);
