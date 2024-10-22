@@ -40,6 +40,11 @@ mlm::mat4	Camera::get_matrix() const
 	return (mlm::lookat(this->pos, this->pos + this->front, this->up));
 }
 
+const float	&Camera::get_fov() const
+{
+	return (this->fov);
+}
+
 void	Camera::process_keyboard(e_camera_movement direction, float &delta_time)
 {
 	float velocity = this->move_speed * delta_time;
