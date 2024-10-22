@@ -32,13 +32,13 @@
 	+ correctly apply texture to 42.obj (kinda)
 	+ accept bmp files with RGBA format
 
-- organize/refactor
++ organize/refactor
 	+ implement texture class
 		+ replace old texture code
 
 	+ give classes default constructors
 
-- implement resource manager
++ implement resource manager
 
 + implement camera
 	+ implement lookat function
@@ -51,14 +51,16 @@
 - add config file
 	- define path to resources
 	- define object file to load
+		- define multiple object files
 	- define texture to load
+		- define multiple texture files
 	? rotation speed/direction
 	? scale
 	? object location
 	? FOV
 	? light source
 
-- create state struct/class that stores render settings
++ create state struct/class that stores render settings
 
 + add input processing to object class
 	+ add position
