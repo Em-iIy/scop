@@ -2,18 +2,7 @@
 Created by: Emily (Em_iIy) Winnink
 Created on: 06/09/2024
 */
-#include <iostream>
-#include <GLAD/glad.h>
-#include <GLFW/glfw3.h>
-#include <math.h>
-#include <emlm/emlm.hpp>
-#include <emlm/mlm/print/vectorPrint.hpp>
-
 #include "Scop.hpp"
-#include "Camera.hpp"
-#include "utils.hpp"
-#include "input.hpp"
-#include "Object.hpp"
 #include "Manager.hpp"
 
 #define WIDTH 1920

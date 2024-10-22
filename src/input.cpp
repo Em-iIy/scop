@@ -3,14 +3,9 @@ Created by: Emily (Em_iIy) Winnink
 Created on: 09/10/2024
 */
 #include "utils/utils.hpp"
-#include <GLFW/glfw3.h>
 
 #include "Manager.hpp"
 #include "Scop.hpp"
-
-#define WIDTH 1920
-#define HEIGHT 1080
-
 
 extern Scop	scop;
 extern float		g_delta_time;
@@ -153,8 +148,8 @@ void	process_input(GLFWwindow *window)
 
 void	mouse_callback(GLFWwindow *window, double in_xpos, double in_ypos)
 {
-	static float	last_x = WIDTH / 2.0f;
-	static float	last_y = HEIGHT / 2.0f;
+	static float	last_x = scop.state.width / 2.0f;
+	static float	last_y = scop.state.height / 2.0f;
 	static bool		first_mouse = true;
 
 	float xpos = static_cast<float>(in_xpos);
