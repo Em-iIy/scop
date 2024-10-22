@@ -5,22 +5,16 @@ Created on: 09/10/2024
 #include "utils/utils.hpp"
 #include <GLFW/glfw3.h>
 
-#include "Camera.hpp"
-#include "Object.hpp"
 #include "Manager.hpp"
+#include "Scop.hpp"
 
 #define WIDTH 1920
 #define HEIGHT 1080
 
 
-extern Camera		camera;
-extern std::string	current_object;
-
-extern int			tex_mode;
+extern Scop	scop;
 extern float		g_delta_time;
 
-extern int			g_width;
-extern int			g_height;
 
 static void	render_options(GLFWwindow *window)
 {
@@ -44,7 +38,7 @@ static void	render_options(GLFWwindow *window)
 	}
 	if (tab.is_pressed())
 	{
-		++tex_mode;
+		++scop.state.tex_mode;
 	}
 	if (esc.is_pressed())
 	{
@@ -70,27 +64,27 @@ static void	camera_movement(GLFWwindow *window)
 
 	if (w.is_down())
 	{
-		camera.process_keyboard(FORWARD, g_delta_time);
+		scop.camera.process_keyboard(FORWARD, g_delta_time);
 	}
 	if (a.is_down())
 	{
-		camera.process_keyboard(LEFT, g_delta_time);
+		scop.camera.process_keyboard(LEFT, g_delta_time);
 	}
 	if (s.is_down())
 	{
-		camera.process_keyboard(BACKWARD, g_delta_time);
+		scop.camera.process_keyboard(BACKWARD, g_delta_time);
 	}
 	if (d.is_down())
 	{
-		camera.process_keyboard(RIGHT, g_delta_time);
+		scop.camera.process_keyboard(RIGHT, g_delta_time);
 	}
 	if (lshift.is_down())
 	{
-		camera.process_keyboard(DOWN, g_delta_time);
+		scop.camera.process_keyboard(DOWN, g_delta_time);
 	}
 	if (space.is_down())
 	{
-		camera.process_keyboard(UP, g_delta_time);
+		scop.camera.process_keyboard(UP, g_delta_time);
 	}
 }
 
@@ -105,7 +99,7 @@ static void	object_movement(GLFWwindow *window)
 	static Key plus(window, GLFW_KEY_EQUAL); // for the button with the + on it
 	static Key minus(window, GLFW_KEY_MINUS);
 
-	Object	&obj = Manager::get_object(current_object);
+	Object	&obj = Manager::get_object(scop.current_object);
 
 	up.update();
 	down.update();
@@ -179,13 +173,13 @@ void	mouse_callback(GLFWwindow *window, double in_xpos, double in_ypos)
 	last_x = xpos;
 	last_y = ypos;
 
-	camera.process_mouse_movement(xoffset, yoffset, true);
+	scop.camera.process_mouse_movement(xoffset, yoffset, true);
 }
 
 void	framebuffer_size_callback(GLFWwindow *window, int width, int height)
 {
 	(void)window;
-	g_width = width;
-	g_height = height;
+	scop.state.width = width;
+	scop.state.height = height;
 	glViewport(0, 0, width, height);
 }

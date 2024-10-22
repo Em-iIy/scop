@@ -6,6 +6,7 @@ NAME = scop
 
 # ----------------------------------------Files
 FILES_SRCS =	main.cpp \
+				Scop.cpp \
 				glad.cpp \
 				delta_time_update.cpp \
 				print_controls.cpp \
