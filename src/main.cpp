@@ -20,24 +20,20 @@ int	main(int argc, char **argv)
 	}
 	try
 	{
-	scop.init_gl(WIDTH, HEIGHT);
-	scop.init_resources(argv[1], argv[2]);
-
-	print_controls();
-	while (!glfwWindowShouldClose(scop.window))
-	{
-		scop.update();
-
-		scop.draw_current();
-	
-	}
-	scop.del();
-	Manager::clear();
-	// glfwTerminate(); // Can cause leaks occasionally
+		scop.init_gl(WIDTH, HEIGHT);
+		scop.init_resources(argv[1], argv[2]);
+		print_controls();
+		while (!glfwWindowShouldClose(scop.window))
+		{
+			scop.update();
+			scop.draw_current();
+		}
+		scop.del();
+		Manager::clear();
+		// glfwTerminate(); // Can cause leaks occasionally
 	}
 	catch(const std::exception& e)
 	{
-		// std::cerr << e.what() << std::endl;
 		return (1);
 	}
 	return (0);

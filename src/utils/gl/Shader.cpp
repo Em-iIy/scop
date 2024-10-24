@@ -49,7 +49,8 @@ void	Shader::load(const char *vertex_source, const char *fragment_source)
 	if(!success)
 	{
 		glGetShaderInfoLog(vertex_shader, 512, NULL, infoLog);
-		std::cerr << "ERROR::SHADER::VERTEX::COMPILATION_FAILED\n" << infoLog << std::endl;
+		std::cerr << "vertex shader compilation error:\n" << infoLog << std::endl;
+		throw std::exception();
 	}
 	fragment_shader = glCreateShader(GL_FRAGMENT_SHADER);
 	glShaderSource(fragment_shader, 1, &fragment_source, NULL);
@@ -58,7 +59,9 @@ void	Shader::load(const char *vertex_source, const char *fragment_source)
 	if(!success)
 	{
 		glGetShaderInfoLog(fragment_shader, 512, NULL, infoLog);
-		std::cout << "ERROR::SHADER::FRAGMENT::COMPILATION_FAILED\n" << infoLog << std::endl;
+		glDeleteShader(vertex_shader);
+		std::cerr << "fragment shader compilation error:\n" << infoLog << std::endl;
+		throw std::exception();
 	}
 	this->_id = glCreateProgram();
 	glAttachShader(this->_id, vertex_shader);
@@ -67,7 +70,10 @@ void	Shader::load(const char *vertex_source, const char *fragment_source)
 	glGetProgramiv(this->_id, GL_LINK_STATUS, &success);
     if (!success) {
         glGetProgramInfoLog(this->_id, 512, NULL, infoLog);
-        std::cout << "ERROR::SHADER::PROGRAM::LINKING_FAILED\n" << infoLog << std::endl;
+		std::cerr << "shader linking error:\n" << infoLog << std::endl;
+		glDeleteShader(vertex_shader);
+		glDeleteShader(fragment_shader);
+		throw std::exception();
     }
 	glDeleteShader(vertex_shader);
 	glDeleteShader(fragment_shader);
@@ -102,5 +108,3 @@ void Shader::set_mat4(const std::string &name, mlm::mat4 &value) const
 {
 	glUniformMatrix4fv(glGetUniformLocation(this->_id, name.c_str()), 1, GL_FALSE, &(value[0][0]));
 }
-
-

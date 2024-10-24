@@ -21,15 +21,25 @@ void	Manager::load_texture_file(Tex2d &tex, const char *file_name)
 void	Manager::load_shader_file(Shader &shader, const char *vertex_file_name, const char *fragment_file_name)
 {
 	char *vertex_source = read_file(vertex_file_name);
-	if (!vertex_source)
-		return ;
 	char *fragment_source = read_file(fragment_file_name);
-	if (!fragment_source)
+	if (!vertex_source || !fragment_source)
+	{
+		std::cout << "load_shader: could not load shaders" << std::endl;
+		free(vertex_source);
+		free(fragment_source);
+		exit(EXIT_FAILURE);
+	}
+	try
+	{
+		shader.load(vertex_source, fragment_source);
+	}
+	catch(...)
 	{
 		free(vertex_source);
-		return ;
+		free(fragment_source);
+		exit(EXIT_FAILURE);
 	}
-	shader.load(vertex_source, fragment_source);
+	
 	free(vertex_source);
 	free(fragment_source);
 }

@@ -3,7 +3,6 @@
 
 #include <cstring>
 #include <iostream>
-#include <unistd.h>
 #include <map>
 
 static mlm::vec3	random_vec3(void)
@@ -59,6 +58,8 @@ static e_obj_tok	check_token(std::string data)
 	return (SKIP);
 }
 
+// Searches the vertex_index_map to see if a vertex already exists
+// If it does, the it can reuse the index, rather than create a new vertex
 static bool	find_vertex_index(std::map<Vertex, GLuint> &vertex_index_map, Vertex &vertex, GLuint &index)
 {
 	std::map<Vertex, GLuint>::iterator it = vertex_index_map.find(vertex);
@@ -71,6 +72,8 @@ static bool	find_vertex_index(std::map<Vertex, GLuint> &vertex_index_map, Vertex
 	return (true);
 }
 
+// Fills the vertices vector with the data gathered while parsing in the Vertex format
+// It does so by reindexing to go from 3 separate vectors of indices to 1
 void Object::fill_vertices()
 {
 	std::map<Vertex, GLuint> vertex_index_map;
@@ -124,7 +127,8 @@ void Object::fill_vertices()
 	}
 }
 
-
+// Finds the center by averaging the positions of the vertices
+// Then moves all vertices by that average, centering them all around 0,0,0
 void	Object::center_vertices()
 {
 	this->center = mlm::vec3(0.0f);
@@ -386,4 +390,3 @@ void	Object::set_scale(const mlm::vec3 &v)
 {
 	this->scale = v;
 }
-

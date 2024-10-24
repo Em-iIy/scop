@@ -81,6 +81,7 @@ void	Camera::process_mouse_movement(float x_offset, float y_offset, bool constra
 	this->yaw += x_offset;
 	this->pitch += y_offset;
 
+	// Prevent issues linked to looking all the way up or down
 	if (constrain_pitch)
 	{
 		if (this->pitch > 89.0f)

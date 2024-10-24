@@ -12,6 +12,4 @@ mat4	translate(const mat4 &m, const vec3 &v);
 mat4	scale(const mat4 &m, const vec3 &v);
 
 
-// lookat
-
 }
