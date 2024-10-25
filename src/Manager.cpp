@@ -12,7 +12,7 @@ void	Manager::load_texture_file(Tex2d &tex, const char *file_name)
 	if (!bmp.data)
 	{
 		std::cout << "load_texture: could not load: " << file_name << std::endl;
-		exit(EXIT_FAILURE);
+		throw std::exception();
 	}
 	tex.load(bmp);
 	free_bmp(bmp);
@@ -27,7 +27,7 @@ void	Manager::load_shader_file(Shader &shader, const char *vertex_file_name, con
 		std::cout << "load_shader: could not load shaders" << std::endl;
 		free(vertex_source);
 		free(fragment_source);
-		exit(EXIT_FAILURE);
+		throw std::exception();
 	}
 	try
 	{
@@ -37,7 +37,7 @@ void	Manager::load_shader_file(Shader &shader, const char *vertex_file_name, con
 	{
 		free(vertex_source);
 		free(fragment_source);
-		exit(EXIT_FAILURE);
+		throw std::exception();
 	}
 	
 	free(vertex_source);
@@ -48,7 +48,6 @@ void	Manager::load_object_file(Object &obj, const char *file_name)
 {
 	std::cout << "loading " << file_name << "..." << std::endl;
 	char *data = read_file(file_name);
-	size_t i = 0;
 	if (!data)
 	{
 		std::cerr << "Object: Could not open " << file_name << std::endl;
@@ -60,7 +59,7 @@ void	Manager::load_object_file(Object &obj, const char *file_name)
 	}
 	catch(const std::runtime_error& e)
 	{
-		std::cerr << file_name << ":" << i << " " << e.what() << '\n';
+		std::cerr << file_name << ": " << e.what() << '\n';
 		free(data);
 		throw std::exception();
 	}
