@@ -9,6 +9,14 @@
 #include "input.hpp"
 #include "utils.hpp"
 
+struct Initted
+{
+	bool	gl;
+	bool	window;
+	bool	resources;
+};
+
+
 struct State
 {
 	int		width;
@@ -27,6 +35,7 @@ class Scop {
 	public:
 		Camera		camera;
 		State		state;
+		Initted		initted;
 		GLFWwindow	*window;
 
 		std::string	current_object;

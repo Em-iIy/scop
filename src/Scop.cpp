@@ -17,28 +17,39 @@ Scop::Scop()
 		.tex_mix = 0.0f,
 		.rotate_speed = 45.0f
 	};
+	this->initted = {
+		.gl = false,
+		.window = false,
+		.resources = false
+	};
 }
 
 void	Scop::del()
 {
-	this->ebo.del();
-	this->vbo.del();
-	this->vao.del();
+	if (this->initted.resources == true)
+	{
+		this->ebo.del();
+		this->vbo.del();
+		this->vao.del();
+	}
+	if (this->initted.window == true)
+		glfwDestroyWindow(this->window);
+	if (this->initted.gl == true)
+		glfwTerminate();
 }
 
 void	Scop::init_gl(const int w, const int h)
 {
 	// Set the random seed
 	srand(time(NULL));
-
 	// Initialize glfw and set opengl version
 	init_glfw();
-
+	this->initted.gl = true;
 	// Create window
 	this->state.width = w;
 	this->state.height = h;
 	this->window = init_window(this->state.width, this->state.height, "scop", NULL, NULL);
-
+	this->initted.window = true;
 	// Set callback functions
 	glfwSetInputMode(this->window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 	glfwSetCursorPosCallback(this->window, mouse_callback);
@@ -89,6 +100,7 @@ void	Scop::init_resources(const char *object, const char *texture)
 	this->vao.link_attr(this->vbo, 2, 3, GL_FLOAT, sizeof(Vertex), (void *)(6 * sizeof(GLfloat)));
 	this->vao.link_attr(this->vbo, 3, 2, GL_FLOAT, sizeof(Vertex), (void *)(9 * sizeof(GLfloat)));
 	this->vao.unbind();
+	this->initted.resources = true;
 }
 
 void	Scop::update()
