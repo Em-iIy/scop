@@ -15,7 +15,7 @@ static mlm::vec3	random_vec3(void)
 	return (ret);
 }
 
-static e_obj_tok	check_token(std::string data)
+static e_obj_tok	check_token(std::string &data)
 {
 	switch (data[0])
 	{
