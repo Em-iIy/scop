@@ -7,6 +7,7 @@ NAME = scop
 # ----------------------------------------Files
 FILES_SRCS =	main.cpp \
 				Scop.cpp \
+				Config.cpp \
 				glad.cpp \
 				delta_time_update.cpp \
 				print_controls.cpp \
@@ -53,7 +54,8 @@ CC = c++
 CFLAGS = -std=c++11
 CFLAGS += -Wall -Wextra -Werror
 CFLAGS += -O3
-CFLAGS += -g -fsanitize=address
+CFLAGS += -g
+# CFLAGS += -g -fsanitize=address
 
 UNAME = $(shell uname)
 
