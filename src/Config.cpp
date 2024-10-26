@@ -45,7 +45,7 @@ void	Config::print()
 {
 	std::cout << "title: " << Config::title << "\n";
 	std::cout << "fov: " << Config::fov << "\n";
-	std::cout << "title: " << Config::title << "\n\n";
+	std::cout << "scale: " << Config::scale << "\n\n";
 	std::cout << "Shaders:\n";
 	for (std::pair<const std::string, std::pair<std::string, std::string>> &shader : Config::shaders)
 	{
@@ -148,6 +148,7 @@ void	Config::parse(const char *data)
 		throw std::runtime_error("objects not set");
 }
 
+// Loads the given config file
 void	Config::load(const char *file_name)
 {
 	std::cout << "loading " << file_name << "..." << std::endl;
@@ -168,4 +169,18 @@ void	Config::load(const char *file_name)
 		throw std::exception();
 	}
 	free(data);
+}
+
+// Loads just an .obj file and a texture and sets default values for the others
+void	Config::load(const char *object, const char *texture)
+{
+	Config::fov = 60.0f;
+	Config::title = "scop";
+	Config::scale = 1.0f;
+	Config::objects["input"] = object;
+	Config::textures["input"] = texture;
+	Config::shaders["default"] = std::pair<std::string, std::string>(
+		"./resources/shaders/default.vert",
+		"./resources/shaders/default.frag"
+	);
 }

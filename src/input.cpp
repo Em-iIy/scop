@@ -94,7 +94,7 @@ static void	object_movement(GLFWwindow *window)
 	static Key plus(window, GLFW_KEY_EQUAL); // for the button with the + on it
 	static Key minus(window, GLFW_KEY_MINUS);
 
-	Object	&obj = Manager::get_object(scop.current_object);
+	Object	&obj = scop.get_current_object();
 
 	up.update();
 	down.update();

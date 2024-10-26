@@ -34,6 +34,10 @@ private:
 	std::vector<Vertex>		vertices;
 	std::vector<GLuint>		indices;
 
+	VAO						vao;
+	VBO						vbo;
+	EBO						ebo;
+
 	std::vector<GLuint>		pos_indices;
 	std::vector<GLuint>		normal_indices;
 	std::vector<GLuint>		uv_indices;
@@ -55,6 +59,8 @@ private:
 	void	center_vertices();
 
 	void	clean_temp();
+
+	void	init_buffers();
 public:
 	Object();
 	Object(const std::string &file_name);
@@ -62,6 +68,12 @@ public:
 
 	void							load_file(const std::string &file_name);
 	void							load(const char *data);
+
+	void							bind();
+	void							unbind();
+	void							draw();
+
+	void							del();
 	
 	void 							process_keyboard(e_object_movement direction, float &delta_time);
 

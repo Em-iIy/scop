@@ -6,6 +6,7 @@
 #include <GLFW/glfw3.h>
 
 #include "Camera.hpp"
+#include "Object.hpp"
 #include "input.hpp"
 #include "utils.hpp"
 
@@ -13,7 +14,6 @@ struct Initted
 {
 	bool	gl;
 	bool	window;
-	bool	resources;
 };
 
 
@@ -38,13 +38,12 @@ class Scop {
 		Initted		initted;
 		GLFWwindow	*window;
 
-		std::string	current_object;
-		std::string	current_texture;
-		std::string	current_shader;
-
-		VAO			vao;
-		VBO			vbo;
-		EBO			ebo;
+		uint	current_object;
+		std::vector<std::string> object_names;
+		uint	current_texture;
+		std::vector<std::string> texture_names;
+		uint	current_shader;
+		std::vector<std::string> shader_names;
 
 		Scop();
 
@@ -52,8 +51,12 @@ class Scop {
 
 		void	init_gl(const int w, const int h);
 
-		void	init_resources(const char *object, const char *texture);
+		void	init_resources();
 
 		void	update();
 		void	draw_current();
+
+		Object	&get_current_object();
+		Tex2d	&get_current_texture();
+		Shader	&get_current_shader();
 };

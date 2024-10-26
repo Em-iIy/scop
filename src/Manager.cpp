@@ -110,4 +110,8 @@ void	Manager::clear(void)
 	{
 		shader.second.del();
 	}
+	for (std::pair<const std::string, Object> &object : Manager::objects)
+	{
+		object.second.del();
+	}
 }

@@ -30,16 +30,14 @@ int	main(int argc, char **argv)
 	}
 	try
 	{
-		scop.init_gl(WIDTH, HEIGHT);
+
 		if (std::string(argv[1]) == "-c")
-		{
 			Config::load(argv[2]);
-			Config::print();
-		}
 		else
-		{
-			scop.init_resources(argv[1], argv[2]);
-		}
+			Config::load(argv[1], argv[2]);
+		Config::print();
+		scop.init_gl(WIDTH, HEIGHT);
+		scop.init_resources();
 		print_controls();
 		while (!glfwWindowShouldClose(scop.window))
 		{

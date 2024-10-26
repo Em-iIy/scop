@@ -260,6 +260,23 @@ void	Object::clean_temp()
 	this->uv_indices.shrink_to_fit();
 }
 
+void	Object::init_buffers()
+{
+	// Create a Vertex Array Object to keep track of the location and layout of the vertex buffer
+	this->vao = VAO(1);
+	this->vao.bind();
+
+	// Create buffers objects for the vertices and indices and store them on GPU
+	this->vbo = VBO((GLfloat *)vertices.data(), vertices.size() * sizeof(Vertex));
+	this->ebo = EBO((GLuint *)indices.data(), indices.size() * sizeof(GLuint));
+
+	this->vao.link_attr(this->vbo, 0, 3, GL_FLOAT, sizeof(Vertex), (void *)0);
+	this->vao.link_attr(this->vbo, 1, 3, GL_FLOAT, sizeof(Vertex), (void *)(3 * sizeof(GLfloat)));
+	this->vao.link_attr(this->vbo, 2, 3, GL_FLOAT, sizeof(Vertex), (void *)(6 * sizeof(GLfloat)));
+	this->vao.link_attr(this->vbo, 3, 2, GL_FLOAT, sizeof(Vertex), (void *)(9 * sizeof(GLfloat)));
+	this->vao.unbind();
+}
+
 Object::Object(): position(mlm::vec3(0.0f)), multi_indexed(false)
 {
 }
@@ -318,8 +335,32 @@ void	Object::load(const char *data)
 	}
 	this->center_vertices();
 	this->fill_vertices();
+	this->init_buffers();
 	this->clean_temp();
 }
+
+void	Object::bind()
+{
+	this->vao.bind();
+}
+
+void	Object::unbind()
+{
+	this->vao.unbind();
+}
+
+void	Object::draw()
+{
+	glDrawElements(GL_TRIANGLES, this->indices.size(), GL_UNSIGNED_INT, 0);
+}
+
+void	Object::del()
+{
+	this->ebo.del();
+	this->vbo.del();
+	this->vao.del();
+}
+
 
 void Object::process_keyboard(e_object_movement direction, float &delta_time)
 {

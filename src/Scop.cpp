@@ -3,6 +3,7 @@
 #include "Scop.hpp"
 #include "utils/utils.hpp"
 #include "Manager.hpp"
+#include "Config.hpp"
 
 extern float	g_delta_time;
 
@@ -19,19 +20,15 @@ Scop::Scop()
 	};
 	this->initted = {
 		.gl = false,
-		.window = false,
-		.resources = false
+		.window = false
 	};
+	this->current_object = 0;
+	this->current_texture = 0;
+	this->current_texture = 0;
 }
 
 void	Scop::del()
 {
-	if (this->initted.resources == true)
-	{
-		this->ebo.del();
-		this->vbo.del();
-		this->vao.del();
-	}
 	if (this->initted.window == true)
 		glfwDestroyWindow(this->window);
 	if (this->initted.gl == true)
@@ -48,7 +45,7 @@ void	Scop::init_gl(const int w, const int h)
 	// Create window
 	this->state.width = w;
 	this->state.height = h;
-	this->window = init_window(this->state.width, this->state.height, "scop", NULL, NULL);
+	this->window = init_window(this->state.width, this->state.height, Config::title.c_str(), NULL, NULL);
 	this->initted.window = true;
 	// Set callback functions
 	glfwSetInputMode(this->window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
@@ -62,45 +59,37 @@ void	Scop::init_gl(const int w, const int h)
 }
 
 
-void	Scop::init_resources(const char *object, const char *texture)
+void	Scop::init_resources()
 {
-	// Read and compile the shaders
-	this->current_shader = "default";
-	Manager::load_shader("default", "./resources/shaders/default.vert", "./resources/shaders/default.frag");
-	Shader	&shader = Manager::get_shader(this->current_shader);
-	// Set the uniform for tex0
-	shader.use();
-	shader.set_int("tex0", 0);
-
-	// Read and load the texture
-	this->current_texture = "input";
-	Manager::load_texture("input", texture);
-
-	// Load in the input object
-	this->current_object = "input";
-	Manager::load_object("input", object);
-	Object	&obj = Manager::get_object(this->current_object);
-	// Move and scale object in front of the camera
-	obj.set_position(mlm::vec3(0.0f, 0.0f, -10.0f));
-	obj.set_scale(mlm::vec3(1.0f));
-
-	// Create a Vertex Array Object to keep track of the location and layout of the vertex buffer
-	this->vao = VAO(1);
-	this->vao.bind();
-
-	// Create buffers objects for the vertices and indices and store them on GPU
-	const std::vector<Vertex> &vertices = obj.get_vertices();
-	const std::vector<GLuint> &indices = obj.get_indices();
-	this->vbo = VBO((GLfloat *)vertices.data(), vertices.size() * sizeof(Vertex));
-	this->ebo = EBO((GLuint *)indices.data(), indices.size() * sizeof(GLuint));
-
-	// Specify the data layout of the vertices
-	this->vao.link_attr(this->vbo, 0, 3, GL_FLOAT, sizeof(Vertex), (void *)0);
-	this->vao.link_attr(this->vbo, 1, 3, GL_FLOAT, sizeof(Vertex), (void *)(3 * sizeof(GLfloat)));
-	this->vao.link_attr(this->vbo, 2, 3, GL_FLOAT, sizeof(Vertex), (void *)(6 * sizeof(GLfloat)));
-	this->vao.link_attr(this->vbo, 3, 2, GL_FLOAT, sizeof(Vertex), (void *)(9 * sizeof(GLfloat)));
-	this->vao.unbind();
-	this->initted.resources = true;
+	this->object_names.reserve(Config::objects.size());
+	this->texture_names.reserve(Config::textures.size());
+	this->shader_names.reserve(Config::shaders.size());
+	for (std::pair<const std::string, std::string> &tex : Config::textures)
+	{
+		// Load in the input object
+		Manager::load_texture(tex.first, tex.second.c_str());
+		this->texture_names.push_back(tex.first);
+	}
+	for (std::pair<const std::string, std::string> &obj : Config::objects)
+	{
+		// Read and load the texture
+		Manager::load_object(obj.first, obj.second.c_str());
+		this->object_names.push_back(obj.first);
+		Object	&object = Manager::get_object(obj.first);
+		// Move and scale object in front of the camera
+		object.set_position(mlm::vec3(0.0f, 0.0f, -10.0f));
+		object.set_scale(mlm::vec3(1.0f));
+	}
+	for (std::pair<const std::string, std::pair<std::string, std::string>> &shdr : Config::shaders)
+	{
+		// Read and compile the shaders
+		Manager::load_shader(shdr.first, shdr.second.first.c_str(), shdr.second.second.c_str());
+		this->shader_names.push_back(shdr.first);
+		Shader	&shader = Manager::get_shader(shdr.first);
+		// Set the uniform for tex0
+		shader.use();
+		shader.set_int("tex0", 0);
+	}
 }
 
 void	Scop::update()
@@ -134,9 +123,9 @@ void	Scop::draw_current()
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	// Fetch object, shader and texture from the manager
-	Object	&object = Manager::get_object(this->current_object);
-	Shader	&shader = Manager::get_shader(this->current_shader);
-	Tex2d	&texture = Manager::get_texture(this->current_texture);
+	Object	&object = this->get_current_object();
+	Shader	&shader = this->get_current_shader();
+	Tex2d	&texture = this->get_current_texture();
 
 	// Get the camera view matrix
 	mlm::mat4 view = this->camera.get_matrix();
@@ -161,8 +150,25 @@ void	Scop::draw_current()
 	shader.set_mat4("view", view);
 
 	// Draw the object to the framebuffer
-	this->vao.bind();
-	glDrawElements(GL_TRIANGLES, object.get_indices().size(), GL_UNSIGNED_INT, 0);
+	// this->vao.bind();
+	object.bind();
+	object.draw();
+	// glDrawElements(GL_TRIANGLES, object.get_indices().size(), GL_UNSIGNED_INT, 0);
 	// Swap the drawn buffer to the one in the window
 	glfwSwapBuffers(this->window);
+}
+
+Object	&Scop::get_current_object()
+{
+	return (Manager::get_object(this->object_names[this->current_object]));
+}
+
+Tex2d	&Scop::get_current_texture()
+{
+	return (Manager::get_texture(this->texture_names[this->current_texture]));
+}
+
+Shader	&Scop::get_current_shader()
+{
+	return (Manager::get_shader(this->shader_names[this->current_shader]));
 }

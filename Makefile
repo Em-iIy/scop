@@ -54,8 +54,8 @@ CC = c++
 CFLAGS = -std=c++11
 CFLAGS += -Wall -Wextra -Werror
 CFLAGS += -O3
-CFLAGS += -g
-# CFLAGS += -g -fsanitize=address
+# CFLAGS += -g
+CFLAGS += -g -fsanitize=address
 
 UNAME = $(shell uname)
 

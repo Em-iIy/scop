@@ -18,5 +18,6 @@ class Config {
 		static float		scale;
 
 		static void	load(const char *file_name);
+		static void	load(const char *object, const char *texture);
 		static void	print();
 };
