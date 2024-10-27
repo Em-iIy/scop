@@ -15,6 +15,7 @@ void main()
 	FragColor = mix(FragColor, tex_color, tex_mix);
 	if (FragColor.a < 0.1f)
 		discard;
+	// https://en.wikipedia.org/wiki/Grayscale#Luma_coding_in_video_systems
 	float gray_scale = 0.299f * FragColor.r + 0.587f * FragColor.g + 0.114f * FragColor.b;
 	FragColor = vec4(vec3(gray_scale), 1.0f);
 }
