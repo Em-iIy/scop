@@ -7,17 +7,17 @@
 		+ too little arguments (< 3) on v, vn and f, and (< 2) on vt
 		+ too many arguments (> 3) on v and vn, and (> 2) on vt
 		+ index out of range
-	- parse o
-	- parse mtllib
+	+ parse o
+	+ parse mtllib
 	+ parse vn
 		+ add vn to final vertex vector
 	+ parse vt
 		+ add vt to final vertex vector
 	+ center object
 
-- handle render objects differently if they have normals/uvs or not
-	- create different shader
-	- create different vbo/vao
++ handle render objects differently if they have normals/uvs or not
+	+ create different shader
+	+ create different vbo/vao
 
 + improve input processing
 	+ implement key class for easier input processing
@@ -44,20 +44,22 @@
 	+ implement lookat function
 	+ add camera controls to print out
 
-- parse .mtl files
-	- open file from filename in .obj file
-	- implement different materials in shader
+x parse .mtl files
+	x open file from filename in .obj file
+	x implement different materials in shader
 
-- add config file
-	- define path to resources
-	- define object file to load
-		- define multiple object files
-	- define texture to load
-		- define multiple texture files
++ add config file
+	x define path to resources
+	+ define object file to load
+		+ define multiple object files
+	+ define texture to load
+		+ define multiple texture files
+	+ define shaders to load
+		+ define multiple shaders files
 	? rotation speed/direction
-	? scale
+	+ scale
 	? object location
-	? FOV
+	+ FOV
 	? light source
 
 + create state struct/class that stores render settings
