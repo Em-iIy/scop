@@ -4,6 +4,7 @@ Created on: 09/09/2024
 */
 
 #include <GLAD/glad.h>
+
 #include "textures.hpp"
 
 uint	load_texture(const char *img)

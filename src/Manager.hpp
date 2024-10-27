@@ -4,7 +4,7 @@
 #include <string>
 
 #include "Object.hpp"
-#include "utils/utils.hpp"
+#include "utils.hpp"
 
 class Manager {
 	private:

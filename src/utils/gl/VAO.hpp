@@ -5,6 +5,7 @@ Created on: 07/09/2024
 #pragma once
 
 #include <GLAD/glad.h>
+
 #include "VBO.hpp"
 
 class VAO

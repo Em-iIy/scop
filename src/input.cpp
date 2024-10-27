@@ -2,8 +2,7 @@
 Created by: Emily (Em_iIy) Winnink
 Created on: 09/10/2024
 */
-#include "utils/utils.hpp"
-
+#include "utils.hpp"
 #include "Manager.hpp"
 #include "Scop.hpp"
 

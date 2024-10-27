@@ -4,6 +4,7 @@
 #include <string>
 #include <GLAD/glad.h>
 #include <emlm/emlm.hpp>
+
 #include "utils.hpp"
 
 #define MOVE_SPEED 10.0f

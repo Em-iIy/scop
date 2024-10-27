@@ -1,5 +1,5 @@
 #include "Config.hpp"
-#include "utils/utils.hpp"
+#include "utils.hpp"
 
 enum e_conf_tok {
 	TITLE,

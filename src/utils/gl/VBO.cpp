@@ -3,9 +3,9 @@ Created by: Emily (Em_iIy) Winnink
 Created on: 07/09/2024
 */
 
-#include "VBO.hpp"
-
 #include <iostream>
+
+#include "VBO.hpp"
 
 VBO::VBO(void)
 {

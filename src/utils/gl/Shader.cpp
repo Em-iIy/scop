@@ -9,7 +9,7 @@ Created on: 07/09/2024
 #include <emlm/emlm.hpp>
 
 #include "Shader.hpp"
-#include "utils/utils.hpp"
+#include "utils.hpp"
 
 Shader::Shader() {}
 

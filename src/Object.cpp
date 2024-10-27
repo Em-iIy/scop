@@ -1,9 +1,9 @@
+#include <iostream>
+#include <map>
+
 #include "Object.hpp"
 #include "utils.hpp"
 
-#include <cstring>
-#include <iostream>
-#include <map>
 
 static mlm::vec3	random_vec3(void)
 {

@@ -1,7 +1,7 @@
 #include <cmath>
 
 #include "Scop.hpp"
-#include "utils/utils.hpp"
+#include "utils.hpp"
 #include "Manager.hpp"
 #include "Config.hpp"
 
