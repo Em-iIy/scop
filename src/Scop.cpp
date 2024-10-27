@@ -7,6 +7,11 @@
 
 extern float	g_delta_time;
 
+static uint	rotate_index(uint index, int direction, uint size)
+{
+	return ((index + size + direction) % size);
+}
+
 Scop::Scop()
 {
 	this->state = {
@@ -61,6 +66,8 @@ void	Scop::init_gl(const int w, const int h)
 
 void	Scop::init_resources()
 {
+	this->camera.set_fov(Config::fov);
+
 	this->object_names.reserve(Config::objects.size());
 	this->texture_names.reserve(Config::textures.size());
 	this->shader_names.reserve(Config::shaders.size());
@@ -156,6 +163,21 @@ void	Scop::draw_current()
 	// glDrawElements(GL_TRIANGLES, object.get_indices().size(), GL_UNSIGNED_INT, 0);
 	// Swap the drawn buffer to the one in the window
 	glfwSwapBuffers(this->window);
+}
+
+void	Scop::change_object(const int direction)
+{
+	this->current_object = rotate_index(this->current_object, direction, this->object_names.size());
+}
+
+void	Scop::change_texture(const int direction)
+{
+	this->current_texture = rotate_index(this->current_texture, direction, this->texture_names.size());
+}
+
+void	Scop::change_shader(const int direction)
+{
+	this->current_shader = rotate_index(this->current_shader, direction, this->shader_names.size());
 }
 
 Object	&Scop::get_current_object()

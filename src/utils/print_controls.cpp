@@ -13,4 +13,7 @@ void	print_controls(void)
 	std::cout << "esc:\t\t\tQuit program" << std::endl;
 	std::cout << "Tab:\t\t\tEnable texture mode" << std::endl;
 	std::cout << "1:\t\t\tEnable wireframe mode" << std::endl;
+	std::cout << "numpad 7/9:\t\tSwitch object" << std::endl;
+	std::cout << "numpad 4/6:\t\tSwitch texture" << std::endl;
+	std::cout << "numpad 1/3:\t\tSwitch shader" << std::endl;
 }

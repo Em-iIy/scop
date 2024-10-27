@@ -56,6 +56,10 @@ class Scop {
 		void	update();
 		void	draw_current();
 
+		void	change_object(const int direction);
+		void	change_texture(const int direction);
+		void	change_shader(const int direction);
+
 		Object	&get_current_object();
 		Tex2d	&get_current_texture();
 		Shader	&get_current_shader();

@@ -91,7 +91,7 @@ static void	object_movement(GLFWwindow *window)
 	static Key right(window, GLFW_KEY_RIGHT);
 	static Key rshift(window, GLFW_KEY_RIGHT_SHIFT);
 	static Key rctrl(window, GLFW_KEY_RIGHT_CONTROL);
-	static Key plus(window, GLFW_KEY_EQUAL); // for the button with the + on it
+	static Key plus(window, GLFW_KEY_EQUAL); // for the key with the + on it
 	static Key minus(window, GLFW_KEY_MINUS);
 
 	Object	&obj = scop.get_current_object();
@@ -139,11 +139,54 @@ static void	object_movement(GLFWwindow *window)
 	}
 }
 
+static void	switch_renders(GLFWwindow *window)
+{
+	static Key	num7(window, GLFW_KEY_KP_7);
+	static Key	num9(window, GLFW_KEY_KP_9);
+	static Key	num4(window, GLFW_KEY_KP_4);
+	static Key	num6(window, GLFW_KEY_KP_6);
+	static Key	num1(window, GLFW_KEY_KP_1);
+	static Key	num3(window, GLFW_KEY_KP_3);
+
+	num7.update();
+	num9.update();
+	num4.update();
+	num6.update();
+	num1.update();
+	num3.update();
+
+	if (num7.is_pressed())
+	{
+		scop.change_object(-1);
+	}
+	if (num9.is_pressed())
+	{
+		scop.change_object(1);
+	}
+	if (num4.is_pressed())
+	{
+		scop.change_texture(-1);
+	}
+	if (num6.is_pressed())
+	{
+		scop.change_texture(1);
+	}
+	if (num1.is_pressed())
+	{
+		scop.change_shader(-1);
+	}
+	if (num3.is_pressed())
+	{
+		scop.change_shader(1);
+	}
+}
+
 void	process_input(GLFWwindow *window)
 {
 	render_options(window);
 	object_movement(window);
 	camera_movement(window);
+	switch_renders(window);
 }
 
 void	mouse_callback(GLFWwindow *window, double in_xpos, double in_ypos)
