@@ -24,18 +24,17 @@ int	main(int argc, char **argv)
 	{
 		std::cerr << "Invalid input!\n";
 		std::cerr << "Usage:\n";
-		std::cerr << "scop -c <config file> (WIP)\n";
+		std::cerr << "scop -c,--config <config file>\n";
 		std::cerr << "scop <object file> <texture file>" << std::endl;
 		return (1);
 	}
 	try
 	{
 
-		if (std::string(argv[1]) == "-c")
+		if (std::string(argv[1]) == "-c" || std::string(argv[1]) == "--config")
 			Config::load(argv[2]);
 		else
 			Config::load(argv[1], argv[2]);
-		Config::print();
 		scop.init_gl(WIDTH, HEIGHT);
 		scop.init_resources();
 		print_controls();
