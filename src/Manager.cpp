@@ -8,6 +8,7 @@ Manager::Manager() {}
 
 void	Manager::load_texture_file(Tex2d &tex, const char *file_name)
 {
+	std::cout << "loading " << file_name << "..." << std::endl;
 	bmp_t	bmp = load_bmp(file_name);
 	if (!bmp.data)
 	{
@@ -20,7 +21,9 @@ void	Manager::load_texture_file(Tex2d &tex, const char *file_name)
 
 void	Manager::load_shader_file(Shader &shader, const char *vertex_file_name, const char *fragment_file_name)
 {
+	std::cout << "loading " << vertex_file_name << "..." << std::endl;
 	char *vertex_source = read_file(vertex_file_name);
+	std::cout << "loading " << fragment_file_name << "..." << std::endl;
 	char *fragment_source = read_file(fragment_file_name);
 	if (!vertex_source || !fragment_source)
 	{
