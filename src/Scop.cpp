@@ -85,7 +85,7 @@ void	Scop::init_resources()
 		Object	&object = Manager::get_object(obj.first);
 		// Move and scale object in front of the camera
 		object.set_position(mlm::vec3(0.0f, 0.0f, -10.0f));
-		object.set_scale(mlm::vec3(1.0f));
+		object.set_scale(mlm::vec3(Config::scale));
 	}
 	for (std::pair<const std::string, std::pair<std::string, std::string>> &shdr : Config::shaders)
 	{
