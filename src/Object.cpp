@@ -244,8 +244,8 @@ void	Object::parse_line(std::string &line)
 // This memory would get cleaned up by garbage collection, however this would only happen at the end.
 void	Object::clean_temp()
 {
-	uint64_t bytes_cleaned = this->pos.size() + this->normals.size() + this->uvs.size() + this->pos_indices.size() + this->normal_indices.size() + this->uv_indices.size();
-	std::cout << "Bytes freed: " << bytes_cleaned << std::endl;
+	// uint64_t bytes_cleaned = this->pos.size() + this->normals.size() + this->uvs.size() + this->pos_indices.size() + this->normal_indices.size() + this->uv_indices.size();
+	// std::cout << "Bytes freed: " << bytes_cleaned << std::endl;
 	this->pos.clear();
 	this->pos.shrink_to_fit();
 	this->normals.clear();
